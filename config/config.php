@@ -1,12 +1,10 @@
 <?php
-     // header("content-type:text/html;charset=utf-8");
-
      class DB {
          private $db_host;//localhost
          private $db_user;//用户名
          private $db_pwd;//密码
          private $db_name;//数据库名
-         private $links;//链接名称
+         public $links;//链接名称
          //构造方法的参数和属性名字一致，但是含义不同
          function __construct(){
              $this -> db_host = "hdm131470340.my3w.com";
@@ -28,10 +26,15 @@
              $arr = mysqli_fetch_assoc($result);
              return $arr;
          }
+         function getNums ($sql) {
+           $result = $this -> query($sql);
+           $nums = mysqli_num_rows($result);
+           return $nums;
+         }
          function getAll($sql){//得到多条记录的二维数组
              $result = $this -> query($sql);
              $rows = array();
-             while($rs = mysql_fetch_array($result)){
+             while($rs = mysqli_fetch_array($result)){
                  $rows[] = $rs;
              }
              return $rows;
@@ -62,4 +65,3 @@
      // $sql = "select * from category";
      // $rs = $db -> getAll($sql);
      // print_r($rs);
-?>

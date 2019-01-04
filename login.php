@@ -1,6 +1,6 @@
 <?php
 session_start();
-// header('Content-type: application/json');
+include_once './config/common.php';
 include_once './service/checkreg.php';
 include_once './config/config.php';
 include_once './config/sql.php';
@@ -12,16 +12,20 @@ include_once './config/sql.php';
        status: -1 未开通 0 已开通 1 已注销
       */
       $data = array(
-        'username' => $username,
-        'password' => md5($password)
+        'username' => $username
        );
       $usercheck = $sql -> loginUser($data);
       $result =  $db -> getData($usercheck);
+      $db->links->close();
       if (!empty($result)) {
-        $_SESSION['username']=$username;
-        return $res = (object)array('data' => (object)array('user_name'=>$result['username']),'msg'=>'登录成功', 'status'=>0);
+        if (md5(md5($password).md5($password))!= $result['password']) {
+          return (object)array('data' => (object)array(),'msg'=>'密码不正确', 'status'=>403);
+        } else {
+          $_SESSION['uid']=$username;
+          return (object)array('data' => (object)array('user_name'=>$result['username'],'user_id'=> $result['admin_id'],'store_id'=>$result['store_id']),'msg'=>'登录成功', 'status'=>0);
+        }
       } else {
-        return $res =(object) array('data' => (object)array(),'msg'=>'未注册', 'status'=>403);
+        return (object) array('data' => (object)array(),'msg'=>'未注册', 'status'=>403);
       }
     }
   }
@@ -30,11 +34,9 @@ include_once './config/sql.php';
   $ischeck = true;
   $username="";
   $password="";
-  var_dump($_POST);
-  exit();
-  if(empty($_POST['user_name'])) {
+  if(empty(trim($_POST['user_name']))) {
       $ischeck = array('data' => (object)array(),'msg'=>'请填写手机号', 'status'=>401);
-  } else if(empty($_POST['password'])) {
+  } else if(empty(trim($_POST['password']))) {
       $ischeck = $ischeck = array('data' => (object)array(),'msg'=>'请填写密码', 'status'=>401);
   }
   if (is_array($ischeck)) {
@@ -45,8 +47,8 @@ include_once './config/sql.php';
       echo json_encode(array('data' => (object)array(),'msg'=>$check->checkMobile($_POST['user_name']), 'status'=>401));
     }
     $login = new Login();
-    $username = $_POST['user_name'];
-    $password = $_POST['password'];
+    $username = trim($_POST['user_name']);
+    $password = trim($_POST['password']);
     $res = $login->set($username,$password);
     echo json_encode($res);
   }
