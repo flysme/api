@@ -16,7 +16,6 @@
              !mysqli_connect_error() or die("连接失败！！");
              $this -> links->query("SET NAMES 'UTF8'");
              //echo $this -> links;打印是资源
-
          }
          function query($sql){    //执行各种sql，inert update delete执行，如果执行select返回结果集
              return $this -> links->query($sql);
