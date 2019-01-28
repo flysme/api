@@ -3,46 +3,53 @@ include_once './config/common.php';
 include_once './service/checkreg.php';
 include_once './config/config.php';
 include_once './config/sql.php';
+include_once './utils/utils.php';
 
 
   class Register {
-    public $sql;
-    public $db;
+    public $utils;
+    public $DB;
     public function getUser ($username) {
-        $usercount = $this-> sql -> checkUser($username);
-        $resultcount =  $this-> db -> getData($usercount);
+        $usercount = Sql::checkUser($username);
+        $resultcount =  $this->DB->getData($usercount);
       return $resultcount;
     }
     public function set ($username,$password) {
-      $this-> sql = new Sql();
-      $this-> db = new DB();
-      $rescount = $this->getUser($username); //检查用户信息
+      $this->DB = new DB();
+      $this->DB->connect();//连接数据库
+      $this-> utils = new Utils();
+      $rescount = self::getUser($username); //检查用户信息
       if (is_array($rescount)) {  // 存在用户信息
         if ($rescount['username'] == $username) {
-          return $res = (object)array('data' => (object)array(),'msg'=>'已注册此账户', 'status'=>403);
+           $res = (object)array('data' => (object)array(),'msg'=>'已注册此账户', 'status'=>400);
         } else {
-          return $res = (object)array('data' => (object)array(),'msg'=>$this-> db->links->error, 'status'=>403);
-        }
-      } else {
-        $data = array(
-          'username' => $username,
-          'password' => md5(md5($password).md5($password)),
-          'create_time' => strtotime('now'),
-          'status' => '-1' /*status: -1 未开通 0 已开通 1 已注销*/
-         );
-        $usercount = $this-> sql -> setUser($data);
-        $result =  $this-> db -> query($usercount);
-        $rescount = $this->getUser($username);
-        $this-> db->links->close();
-        if (!empty($rescount)) {
-          return $res = (object)array('data' => (object)array('username'=>$rescount['username'],'user_id'=> $rescount['admin_id'],'store_id'=>$rescount['store_id']),'msg'=>'注册成功', 'status'=>0);
-        } else {
-          return $res = (object)array('data' => (object)array(),'msg'=>'注册失败', 'status'=>403);
+           $res = (object)array('data' => (object)array(),'msg'=>$this->DB->links->error, 'status'=>400);
         }
       }
+      else
+      {
+        $user_id = $this->utils->generateUid();
+        $data = array(
+          'user_id' => $user_id,
+          'username' => $username,
+          'password' => md5(md5($password).md5($password)),
+          'create_time' => time(),
+          'status' => '-1' /*status: -1 未开通 0 已开通 1 已注销*/
+         );
+         var_dump($data);
+        $usercount = Sql::setUser($data);
+        $result =  $this->DB->query($usercount);
+        $getrescount = self::getUser($username);
+        if (!empty($result) && !empty($getrescount)) {
+           $res = (object)array('data' => (object)array('username'=>$getrescount['username'],'user_id'=> $getrescount['admin_id'],'store_id'=>$getrescount['store_id']),'msg'=>'注册成功', 'status'=>0);
+        } else {
+           $res = (object)array('data' => (object)array(),'msg'=>'注册失败', 'status'=>400);
+        }
+      }
+      $this->DB->links->close();
+      return $res;
     }
   }
-
   $ischeck = true;
   $username= trim($_POST['user_name']);
   $password= trim($_POST['password']);
@@ -53,16 +60,16 @@ include_once './config/sql.php';
        $res = $register->set($username,$password);
        echo json_encode($res);
      } else {
-       echo json_encode(array('data' => (object)array(),'msg'=>$check->checkMobile($username), 'status'=>401));
+       echo json_encode(array('data' => (object)array(),'msg'=>$check->checkMobile($username), 'status'=>400));
      }
   }
   else
   {
     if (empty($username)) {
-      echo json_encode(array('data' => (object)array(),'msg'=>'请填写手机号', 'status'=>401));
+      echo json_encode(array('data' => (object)array(),'msg'=>'请填写手机号', 'status'=>400));
       exit();
     }
     if (empty($password)) {
-      echo json_encode(array('data' => (object)array(),'msg'=>'请填写密码', 'status'=>401));
+      echo json_encode(array('data' => (object)array(),'msg'=>'请填写密码', 'status'=>400));
     }
   }

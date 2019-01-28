@@ -1,39 +1,145 @@
 <?php
+  include_once '../utils/utils.php';
   class Sql {
     /*注册*/
-    public function setUser($data){
-      return "insert into store_user(`username`, `password`, `create_time`,`status`)values('{$data["username"]}','{$data["password"]}','{$data["create_time"]}','{$data["status"]}')";
+    public static function setUser($data){
+      return "insert into store_user(`user_id`,`username`, `password`, `create_time`,`status`)values('{$data["user_id"]}','{$data["username"]}','{$data["password"]}','{$data["create_time"]}','{$data["status"]}')";
     }
     /*校验用户*/
-    public function checkUser($username){
-      return "select * from store_user where username in ('{$username}')";
-    }
-    /*更新用户店铺信息*/
-    public function updateUserstoreInfo($store_id,$user_id){
-      return "update store_user set store_id= concat(store_id,'{$store_id} ') where admin_id= '{$user_id}'";
+    public static function checkUser($username){
+      return "select md5(admin_id) as admin_id,password,create_time,status from store_user where username in ('{$username}')";
     }
     /*登录*/
-    public function loginUser($data){
-      return "select * from store_user where username in ('{$data["username"]}')";
+    public static function loginUser($data){
+      return "select user_id,password,create_time,status from store_user where username in ('{$data["username"]}')";
     }
     /*校验店铺*/
-    public function checkStore($store_name){
-      return "select * from store where store_name in ('{$store_name}')";
+    public static function checkStore($store_name){
+      return "select store_id,store_name,create_time,status,address,street from store where store_name in ('{$store_name}')";
     }
     /*开通店铺*/
-    public function apply($data){
-      return "insert into store(`store_name`, `create_time`, `status`,`address`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}')";
+    public static function apply($data){
+      return "insert into store(`store_name`, `create_time`, `status`,`address`,`store_id`,`street`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}')";
+    }
+    /*获取用户店铺*/
+    public static function getStoreList($user_id){
+      $basesql = "select user_store_relation.*,store.* FROM store RIGHT OUTER JOIN user_store_relation ON user_store_relation.store_id = store.store_id";
+      $sql = "{$basesql} where user_id='{$user_id}'";
+      return $sql;
     }
     /*关联店铺与用户*/
-    public function relevancyUserandStroe($data){
-      return "insert into user_store_relation(`user_id`, `store_id`, `create_time`,`privileges`)values('{$data["user_id"]}','{$data["store_id"]}','{$data["create_time"]}','{$data["privileges"]}')";
+    public static function relevancyUserandStroe($data){
+      return "insert into user_store_relation(`user_id`, `store_id`, `create_time`,`privileges`,`relation_id`)values('{$data["user_id"]}','{$data["store_id"]}','{$data["create_time"]}','{$data["privileges"]}','{$data["relation_id"]}')";
     }
     /*新增商品分类*/
-    public function createProductcategory($data){
-      return "insert into product_category(`cats_name`, `store_id`, `create_time`)values('{$data["cats_name"]}','{$data["store_id"]}','{$data["create_time"]}')";
+    public static function createProductcategory($data){
+      return "insert into product_category(`cats_name`,`cates_id`, `store_id`, `create_time`,`status`,`upts_time`)values('{$data["cats_name"]}','{$data["cates_id"]}','{$data["store_id"]}','{$data["create_time"]}','{$data["status"]}','{$data["upts_time"]}')";
+    }
+    /*更新商品分类*/
+    public static function updateProductcategory($data){
+      return "update product_category set cats_name='{$data['cats_name']}',upts_time='{$data['upts_time']}' where cates_id='{$data['catesgory_id']}'";
+    }
+    /*更新商品分类*/
+    public static function deletecatesgorys($catesgory_id){
+      return "update product_category set status in(0) where cates_id={$catesgory_id}";
     }
     /*获取店铺商品分类*/
-    public function getProductcategory($store_id){
-      return "select * from product_category where store_id in ('{$store_id}')";
+    public static function getProductcategory($store_id){
+      return "select cates_id as id,cats_name,store_id,create_time,status,upts_time from product_category where store_id in ('{$store_id}') and status in(1)";
+    }
+    /*新增商品*/
+    public static function createProducts($data){
+      return "insert into product(`product_id`,`product_name`,`product_desc`, `product_img`, `store_id`, `category_id`, `product_unit`, `attribute_list`, `status`, `update_time`, `create_time`)values('{$data["product_id"]}','{$data["product_name"]}','{$data["product_desc"]}','{$data["product_img"]}','{$data["store_id"]}','{$data["category_id"]}','{$data["product_unit"]}','{$data["attribute_list"]}','{$data["status"]}','{$data["update_time"]}','{$data["create_time"]}')";
+    }
+    /*更新商品*/
+    public static function updateProducts($data){
+      return "update product set product_name='{$data['product_name']}',product_desc='{$data['product_desc']}',product_img='{$data['product_img']}',category_id='{$data['category_id']}',product_unit='{$data['product_unit']}',attribute_list='{$data['attribute_list']}',update_time='{$data['update_time']}' where product_id='{$data['product_id']}'";
+    }
+    /*删除商品sku*/
+    public static function delProductsSku($product_id){
+      return "delete from product_specs where product_id='{$product_id}'";
+    }
+    /*删除商品sku_key and sku_value*/
+    public static function delProductsSkuKey_val($product_id){
+      return "delete product_specs_attr_key,product_specs_attr_values from product_specs_attr_key LEFT JOIN product_specs_attr_values ON product_specs_attr_key.id=product_specs_attr_values.attr_keys_id WHERE product_specs_attr_key.product_id='{$product_id}'";
+    }
+    /*根据商品id查询商品信息*/
+    public static function selectProductIdProducts($product_id){
+      return "select * from product where product_id ='{$product_id}'";
+    }
+    /*查询商品信息*/
+    public static function selectProducts($data){
+      return "select * from product where store_id ='{$data["store_id"]}' and product_name='{$data["product_name"]}'";
+    }
+    /*新增sku*/
+    public static function createSkuProducts($data){
+      $utils = new Utils();
+      $sku_id = $utils->generateUid();
+      $insert = "insert into product_specs (`sku_id`,`product_id`,`product_num`,`product_price`,`product_specs`,`product_img`, `upts_time`, `create_time`) values ";
+      foreach($data as $value){
+        $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
+      };
+      $insert = chop($insert,',');
+      return $insert;
+    }
+    /*新增sku attr-key*/
+    public static function createSkuSpecsAttrKey($data){
+      $insert = "insert into product_specs_attr_key (`attr_key_name`,`product_id`, `upts_time`, `create_time`) values ";
+      foreach($data as $value){
+        $insert .='("'.$value['attr_key_name'].'","'.$value['product_id'].'",'.time().','.time().'),';
+      };
+      $insert = chop($insert,',');
+      return $insert;
+    }
+    /*新增sku attr-key*/
+    public static function selectSkuSpecsAttrKey($product_id){
+      return "select product_specs_attr_key.*,product_specs_attr_key.id as attr_keys_id from product_specs_attr_key where product_id in('{$product_id}')";
+    }
+    /*新增sku attr-values*/
+    public static function selectSkuSpecsAttrValues($data){
+      $insert = "insert into product_specs_attr_values (`attr_values_name`,`attr_keys_id`,`picUrl`, `upts_time`, `create_time`) values ";
+      foreach($data as $value){
+        $insert .='("'.$value['attr_values_name'].'","'.$value['attr_keys_id'].'","'.$value['picUrl'].'",'.time().','.time().'),';
+      };
+      $insert = chop($insert,',');
+      return $insert;
+    }
+    /*查询商品列表*/
+    public static function getProductsList($data){
+      $basesql = "select product.*,product_specs.product_id as sku_product_id, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs,product_specs.product_img FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+      $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1)  limit {$data['currentPage']}, {$data['pageSize']}";
+      if (!empty($data['catesgory_id'])) {
+        $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and category_id='{$data['catesgory_id']}' limit {$data['currentPage']}, {$data['pageSize']}";
+      }
+      if (!empty($data['product_name'])) {
+        $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and product_name like '%{$data['product_name']}%'  limit {$data['currentPage']}, {$data['pageSize']}";
+      }
+      if (!empty($data['catesgory_id']) && !empty($data['product_name'])){
+        $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and category_id='{$data['catesgory_id']}' and product_name like '%{$data['product_name']}%' limit {$data['currentPage']}, {$data['pageSize']}";
+      }
+      return $sql;
+    }
+    /*查询商品详情*/
+    public static function getProductsDetail($product_id){
+      $basesql = "select product.*,product_specs.product_id as sku_product_id, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs,product_specs.product_img FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+      $sql = "{$basesql} where product.product_id='{$product_id}'";
+      return $sql;
+    }
+    /*查询商品详情skumap*/
+    public static function getProductsDetailSkuSpec($product_id){
+      $basesql = "select product_specs_attr_key.*, product_specs_attr_key.id as attr_k_id, product_specs_attr_values.*,product_specs_attr_values.id as attr_v_id FROM product_specs_attr_key RIGHT OUTER JOIN product_specs_attr_values ON product_specs_attr_key.id = product_specs_attr_values.attr_keys_id";
+      $sql = "{$basesql} where product_specs_attr_key.product_id='{$product_id}'";
+      return $sql;
+    }
+    /*商品上下架*/
+    public static function updateProductstatus($status,$product_ids){
+      if (count($product_ids) == 1) {
+        $product_id = reset($product_ids);
+        $sql = "update product set status={$status} where product_id= '{$product_id}'";
+      } else {
+        $product_ids = implode(",",$product_ids);
+        $sql = "update product set status={$status} where product_id in('{$product_ids}')";
+      }
+      return $sql;
     }
   }

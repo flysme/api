@@ -1,50 +1,77 @@
 <?php
-session_start();
 include_once './config/common.php';
 include_once './service/checkreg.php';
-include_once './config/config.php';
+include_once './config/db.php';
 include_once './config/sql.php';
+include_once './service/session/session.php';
   class Login {
+    public function getStoreData ($store) {
+      $res = array();
+      if (is_array($store) && count($store) > 0) {
+        foreach ($store as  $value) {
+          $address = array_values(explode("/",$value['address']));
+          $district = array(
+            'province'=>$address[0],
+            'city'=>$address[1],
+            'name'=>$address[2],
+          );
+          $item = array(
+            '_id'=>$value['store_id'],
+            'name'=>$value['store_name'],
+            'address'=>$district,
+          );
+          array_push($res, $item);
+        }
+      }
+      return $res;
+    }
     public function set ($username,$password) {
-      $sql = new Sql();
-      $db = new DB();
       /*
        status: -1 未开通 0 已开通 1 已注销
       */
       $data = array(
         'username' => $username
        );
-      $usercheck = $sql -> loginUser($data);
-      $result =  $db -> getData($usercheck);
-      $db->links->close();
-      if (!empty($result)) {
+      $DB = new DB();
+      $DB->connect();//连接数据库
+
+      $usercheck = Sql::loginUser($data);
+      $result = $DB->getData($usercheck);
+      if (is_array($result)) {
         if (md5(md5($password).md5($password))!= $result['password']) {
-          return (object)array('data' => (object)array(),'msg'=>'密码不正确', 'status'=>403);
+          $res =  (object)array('data' => (object)array(),'msg'=>'密码不正确', 'status'=>400);
         } else {
-          $_SESSION['uid']=$username;
-          return (object)array('data' => (object)array('user_name'=>$result['username'],'user_id'=> $result['admin_id'],'store_id'=>$result['store_id']),'msg'=>'登录成功', 'status'=>0);
+          $getStoresql = Sql::getStoreList($result['user_id']);
+          $resultstore = $DB->getAll($getStoresql);
+          $info = self::getStoreData($resultstore);
+          $resinfo = (object)array('user_name'=>$username,'user_id'=> $result['user_id'],'store_info'=>$info);
+          Session::set('uid', $username, 800); //设置session
+          $res =  (object)array('data' =>$resinfo,'msg'=>'登录成功', 'status'=>0);
         }
-      } else {
-        return (object) array('data' => (object)array(),'msg'=>'未注册', 'status'=>403);
       }
+       else
+      {
+         $res =  (object) array('data' => (object)array(),'msg'=>'未注册', 'status'=>403);
+      }
+      $DB->links->close();
+      return $res;
     }
   }
-
 
   $ischeck = true;
   $username="";
   $password="";
   if(empty(trim($_POST['user_name']))) {
-      $ischeck = array('data' => (object)array(),'msg'=>'请填写手机号', 'status'=>401);
+      $ischeck = array('data' => (object)array(),'msg'=>'请填写手机号', 'status'=>400);
   } else if(empty(trim($_POST['password']))) {
-      $ischeck = $ischeck = array('data' => (object)array(),'msg'=>'请填写密码', 'status'=>401);
+      $ischeck = $ischeck = array('data' => (object)array(),'msg'=>'请填写密码', 'status'=>400);
   }
   if (is_array($ischeck)) {
     echo json_encode($ischeck);
   } else {
     $check = new Match();
     if ($check->checkMobile($_POST['user_name'])!='') {
-      echo json_encode(array('data' => (object)array(),'msg'=>$check->checkMobile($_POST['user_name']), 'status'=>401));
+      echo json_encode(array('data' => (object)array(),'msg'=>$check->checkMobile($_POST['user_name']), 'status'=>400));
     }
     $login = new Login();
     $username = trim($_POST['user_name']);
