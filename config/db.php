@@ -3,10 +3,10 @@
          public $links;//链接名称
          //构造方法的参数和属性名字一致，但是含义不同
          public function connect(){
-             $db_host = "********";//localhost
-             $db_user = "********";//用户名
-             $db_pwd = "********";//密码
-             $db_name = "********";//数据库名
+             $db_host = "hdm131470340.my3w.com";//localhost
+             $db_user = "hdm131470340";//用户名
+             $db_pwd = "zfxyyc0822,,";//密码
+             $db_name = "hdm131470340_db";//数据库名
              //链接数据库代码
              $this->links = new mysqli($db_host,$db_user,$db_pwd,$db_name);
              !mysqli_connect_error() or die("连接失败！！");
@@ -17,20 +17,22 @@
              return $this->links->query($sql);
          }
          public function getData($sql){//select的记录数据
-             $result = self::query($sql);
+             $result = $this->links->query($sql);
              $arr = mysqli_fetch_assoc($result);
              return $arr;
          }
          public function getNums ($sql) {
-             $result = self::query($sql);
+             $result = $this->links->query($sql);
              $nums = mysqli_num_rows($result);
              return $nums;
          }
          public function getAll($sql){//得到多条记录的二维数组
-             $result = self::query($sql);
+             $result = $this->links->query($sql);
              $rows = array();
-             while($rs = mysqli_fetch_array($result)){
-                 $rows[] = $rs;
+             if (mysqli_num_rows($result) > 0) {
+               while($rs = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                   $rows[] = $rs;
+               }
              }
              return $rows;
          }

@@ -1,11 +1,9 @@
 <?php
 include_once './config/common.php';
 include_once './service/checkreg.php';
-include_once './config/config.php';
+include_once './config/db.php';
 include_once './config/sql.php';
 include_once './utils/utils.php';
-
-
   class Register {
     public $utils;
     public $DB;
@@ -18,7 +16,7 @@ include_once './utils/utils.php';
       $this->DB = new DB();
       $this->DB->connect();//连接数据库
       $this-> utils = new Utils();
-      $rescount = self::getUser($username); //检查用户信息
+      $rescount = $this->getUser($username); //检查用户信息
       if (is_array($rescount)) {  // 存在用户信息
         if ($rescount['username'] == $username) {
            $res = (object)array('data' => (object)array(),'msg'=>'已注册此账户', 'status'=>400);
@@ -36,12 +34,11 @@ include_once './utils/utils.php';
           'create_time' => time(),
           'status' => '-1' /*status: -1 未开通 0 已开通 1 已注销*/
          );
-         var_dump($data);
         $usercount = Sql::setUser($data);
         $result =  $this->DB->query($usercount);
-        $getrescount = self::getUser($username);
-        if (!empty($result) && !empty($getrescount)) {
-           $res = (object)array('data' => (object)array('username'=>$getrescount['username'],'user_id'=> $getrescount['admin_id'],'store_id'=>$getrescount['store_id']),'msg'=>'注册成功', 'status'=>0);
+        $getrescount = $this->getUser($username);
+        if (is_array($getrescount)) {
+           $res = (object)array('data' => (object)array('username'=>$getrescount['username'],'user_id'=> $getrescount['user_id']),'msg'=>'注册成功', 'status'=>0);
         } else {
            $res = (object)array('data' => (object)array(),'msg'=>'注册失败', 'status'=>400);
         }

@@ -29,7 +29,7 @@ include_once './utils/oauth.php';
       if ($result) {
           $res = (object)array('data' => (object)array(),'msg'=>'', 'status'=>0);
       } else {
-        $res = (object) array('data' => (object)array(),'msg'=>$this->DB->links->error, 'status'=>403);
+        $res = (object) array('data' => (object)array(),'msg'=>$this->DB->links->error, 'status'=>400);
       }
       $this->DB->links->close();
       return $res;

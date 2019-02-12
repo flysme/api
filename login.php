@@ -44,8 +44,11 @@ include_once './service/session/session.php';
           $getStoresql = Sql::getStoreList($result['user_id']);
           $resultstore = $DB->getAll($getStoresql);
           $info = self::getStoreData($resultstore);
-          $resinfo = (object)array('user_name'=>$username,'user_id'=> $result['user_id'],'store_info'=>$info);
-          Session::set('uid', $username, 800); //设置session
+          $getdefaultStoresql = Sql::getUserdefaultStroe($result['user_id']);
+          $resultdefaultstore = $DB->getData($getdefaultStoresql);
+          $store_id = isset($resultdefaultstore['store_id']) ?  $resultdefaultstore['store_id'] :'';
+          $resinfo = (object)array('user_name'=>$username,'store_id'=>$store_id,'store_info'=>$info);
+          Session::set('uid', $result['user_id'], 1800); //设置session
           $res =  (object)array('data' =>$resinfo,'msg'=>'登录成功', 'status'=>0);
         }
       }

@@ -7,7 +7,7 @@
     }
     /*校验用户*/
     public static function checkUser($username){
-      return "select md5(admin_id) as admin_id,password,create_time,status from store_user where username in ('{$username}')";
+      return "select user_id,password,username,create_time,status from store_user where username in ('{$username}')";
     }
     /*登录*/
     public static function loginUser($data){
@@ -18,8 +18,12 @@
       return "select store_id,store_name,create_time,status,address,street from store where store_name in ('{$store_name}')";
     }
     /*开通店铺*/
+    public static function apply_geo($data){
+      return "insert into store_geo(`store_id`, `lng`, `lat`)values('{$data["store_id"]}','{$data["lng"]}','{$data["lat"]}')";
+    }
+    /*店铺地址经纬度*/
     public static function apply($data){
-      return "insert into store(`store_name`, `create_time`, `status`,`address`,`store_id`,`street`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}')";
+      return "insert into store(`store_name`, `create_time`, `status`,`address`,`store_id`,`street`,`geo`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}','{$data["geo"]}')";
     }
     /*获取用户店铺*/
     public static function getStoreList($user_id){
@@ -31,6 +35,18 @@
     public static function relevancyUserandStroe($data){
       return "insert into user_store_relation(`user_id`, `store_id`, `create_time`,`privileges`,`relation_id`)values('{$data["user_id"]}','{$data["store_id"]}','{$data["create_time"]}','{$data["privileges"]}','{$data["relation_id"]}')";
     }
+    /*插入用户默认店铺*/
+    public static function insertUserandStroe($data){
+      return "insert into user_default_store(`user_id`, `store_id`, `create_time`,`upts_time`)values('{$data["user_id"]}','{$data["store_id"]}','{$data["create_time"]}','{$data["upts_time"]}')";
+    }
+    /*更新用户默认店铺*/
+    public static function updateUserandStroe($data){
+      return "update user_default_store set store_id='{$data['store_id']}',upts_time={$data['upts_time']} where user_id='{$data['user_id']}'";
+    }
+    /*获取用户默认店铺*/
+    public static function getUserdefaultStroe($user_id){
+      return "select user_default_store.*,user_default_store.store_id as default_store_id,store.* FROM user_default_store RIGHT OUTER JOIN store ON user_default_store.store_id = store.store_id where user_default_store.user_id in ('{$user_id}')";
+    }
     /*新增商品分类*/
     public static function createProductcategory($data){
       return "insert into product_category(`cats_name`,`cates_id`, `store_id`, `create_time`,`status`,`upts_time`)values('{$data["cats_name"]}','{$data["cates_id"]}','{$data["store_id"]}','{$data["create_time"]}','{$data["status"]}','{$data["upts_time"]}')";
@@ -41,7 +57,7 @@
     }
     /*更新商品分类*/
     public static function deletecatesgorys($catesgory_id){
-      return "update product_category set status in(0) where cates_id={$catesgory_id}";
+      return "update product_category set status=0 where cates_id='{$catesgory_id}'";
     }
     /*获取店铺商品分类*/
     public static function getProductcategory($store_id){
@@ -106,7 +122,7 @@
     }
     /*查询商品列表*/
     public static function getProductsList($data){
-      $basesql = "select product.*,product_specs.product_id as sku_product_id, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs,product_specs.product_img FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+      $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
       $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1)  limit {$data['currentPage']}, {$data['pageSize']}";
       if (!empty($data['catesgory_id'])) {
         $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and category_id='{$data['catesgory_id']}' limit {$data['currentPage']}, {$data['pageSize']}";
@@ -121,7 +137,7 @@
     }
     /*查询商品详情*/
     public static function getProductsDetail($product_id){
-      $basesql = "select product.*,product_specs.product_id as sku_product_id, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs,product_specs.product_img FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+      $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
       $sql = "{$basesql} where product.product_id='{$product_id}'";
       return $sql;
     }

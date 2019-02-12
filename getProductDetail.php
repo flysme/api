@@ -18,7 +18,7 @@ include_once './utils/oauth.php';
             'product_id'=> $item['product_id'],
             'title'=> base64_decode($item['product_name']),
             'desc'=>base64_decode($item['product_desc']),
-            'images'=> $item['product_img'],
+            'img'=> $item['product_img'],
             'category_id'=> $item['category_id'],
             'store_id'=> $item['store_id'],
             'num'=> $item['product_num'],
