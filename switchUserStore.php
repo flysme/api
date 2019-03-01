@@ -1,27 +1,29 @@
 <?php
 include_once './config/common.php';
 include_once './service/checkreg.php';
-include_once './config/db.php';
 include_once './config/sql.php';
 include_once './service/session/session.php';
   class Switchstore {
+    function __construct(){
+       include_once './config/db.php';
+       $this -> DB = new DB();
+    }
     public function set ($user_id,$store_id) {
-      $DB = new DB();
-      $DB->connect();//连接数据库
+      $this -> DB ->connect();//连接数据库
       $data = array(
         'store_id'=>$store_id,
         'user_id'=>$user_id,
         'upts_time'=>time(),
       );
       $usercheck = Sql::updateUserandStroe($data);
-      $result = $DB->query($usercheck);
+      $result = $this -> DB ->query($usercheck);
       if ($result) {
           $resinfo = (object)array('store_id'=> $store_id);
           $res =  (object)array('data' =>$resinfo,'msg'=>'', 'status'=>0);
       } else {
-          $res = (object) array('data' => (object)array(),'msg'=>$DB->links->error, 'status'=>400);
+          $res = (object) array('data' => (object)array(),'msg'=>$this -> DB ->links->error, 'status'=>400);
       }
-      $DB->links->close();
+      $this -> DB ->links->close();
       return $res;
     }
   }

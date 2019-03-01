@@ -1,6 +1,5 @@
 <?php
 include_once './config/common.php';
-include_once './config/db.php';
 include_once './config/sql.php';
 include_once './utils/utils.php';
 include_once './utils/oauth.php';
@@ -9,9 +8,12 @@ include_once './service/session/session.php';
   class GetuserInfo {
     public $utils;
     public $DB;
+    function __construct(){
+       include_once './config/db.php';
+       $this -> DB = new DB();
+       $this-> utils = new Utils();
+    }
     public function getstorestatus ($user_id) {
-      $this-> utils = new Utils();
-      $this->DB = new DB();
       $this->DB->connect();//连接数据库
       $getStoresql = Sql::getUserdefaultStroe($user_id);
       $resultstore = $this->DB->getData($getStoresql);

@@ -61,7 +61,7 @@ include_once './utils/oauth.php';
       'product_id' => $product_id,
       'product_name' => $product_name,
       'product_desc' => $products_desc,
-      'product_img' => $product_image ? serialize($product_image) : '',
+      'product_img' => $product_image ? $product_image : '',
       'store_id' => $store_id,
       'category_id' => $category_id,
       'product_unit' => $product_unit,

@@ -1,13 +1,15 @@
 <?php
 include_once './config/common.php';
-include_once './config/db.php';
 include_once './config/sql.php';
 include_once './utils/utils.php';
 include_once './utils/oauth.php';
   class Create_categorys {
     public $DB;
+    function __construct(){
+       include_once './config/db.php';
+       $this -> DB = new DB();
+    }
     public function mysql () {
-      $this->DB = new DB();
       $this->DB->connect();//连接数据库
     }
     public function set ($cats_name,$store_id) {

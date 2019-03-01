@@ -23,7 +23,7 @@
     }
     /*店铺地址经纬度*/
     public static function apply($data){
-      return "insert into store(`store_name`, `create_time`, `status`,`address`,`store_id`,`street`,`geo`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}','{$data["geo"]}')";
+      return "insert into store(`store_name`, `create_time`, `status`,`address`,`store_id`,`street`,`lng`,`lat`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}','{$data["lng"]}','{$data["lat"]}')";
     }
     /*获取用户店铺*/
     public static function getStoreList($user_id){
@@ -157,5 +157,13 @@
         $sql = "update product set status={$status} where product_id in('{$product_ids}')";
       }
       return $sql;
+    }
+    /*新增店铺设置*/
+    public static function storeSetting($data){
+      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`discounts`,`business_start_times`,`business_end_times`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}','{$data["delivery_price"]}','{$data["start_delivery_price"]}','{$data["discounts"]}','{$data["business_start_times"]}','{$data["business_end_times"]}','{$data["create_time"]}')";
+    }
+    /*获取店铺设置信息*/
+    public static function getStoreSetting($store_id){
+      return "select store_setting.setting_id,store_setting.business_end_times,store_setting.delivery_price,store_setting.delivery_price,store_setting.start_delivery_price,store_setting.discounts,store_setting.business_start_times,store_setting.business_end_times from store_setting where store_id in('{$store_id}')";
     }
   }

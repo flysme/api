@@ -1,15 +1,18 @@
 <?php
 include_once './config/common.php';
-include_once './config/db.php';
 include_once './config/sql.php';
 include_once './utils/oauth.php';
 
   class Get_categorys {
+    public $DB;
+    function __construct(){
+       include_once './config/db.php';
+       $this -> DB = new DB();
+    }
     public function get ($store_id) {
-      $DB = new DB();
-      $DB->connect();//连接数据库
-      $categorysql = Sql::getProductcategory($store_id);
-      $result = $DB->getAll($categorysql);
+      $this -> DB->connect();//连接数据库
+      $categorysql = Sql::getProductcategory($store_id);//连接店铺商品分类
+      $result = $this -> DB->getAll($categorysql);
       if (!empty($result)) {
         $resarr = array();
         foreach ($result as $item) {
@@ -24,7 +27,7 @@ include_once './utils/oauth.php';
       } else {
         $res = (object) array('data' => (object)array('categorys'=>array()),'msg'=>'暂无分类', 'status'=>0);
       }
-      $DB->links->close();
+      $this -> DB->links->close();
       return $res;
     }
   }

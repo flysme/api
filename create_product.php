@@ -35,7 +35,6 @@ include_once './utils/oauth.php';
           $skusspecItem[$key]['price'] = $item['v'];
         }
       }
-
     }
     /*校验必填字段*/
   if(empty($product_name)) {
@@ -128,6 +127,7 @@ include_once './utils/oauth.php';
                        'product_img'=>'',
                      );
                    }
+
                    /*插入sku记录*/
                    $insertskuspecs = Sql::createSkuProducts($skuInsertList);
                    $skusqecsAttrkeyres = $DB->query($insertskuspecs);

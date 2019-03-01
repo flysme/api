@@ -1,6 +1,5 @@
 <?php
 include_once './config/common.php';
-include_once './config/db.php';
 include_once './config/sql.php';
 include_once './utils/utils.php';
 include_once './utils/oauth.php';
@@ -9,6 +8,10 @@ include_once './service/session/session.php';
   class Applystore {
     public $utils;
     public $DB;
+    function __construct(){
+       include_once './config/db.php';
+       $this -> DB = new DB();
+     }
     public function checkStores ($store_name) {
       $ressql= Sql::checkStore($store_name); //检查店铺信息sql
       $res= $this->DB->getData($ressql); //检查店铺信息
@@ -31,9 +34,8 @@ include_once './service/session/session.php';
       }
       return $flag;
     }
-    public function set ($store_name,$address,$street,$user_id,$privileges,$geo) {
+    public function set ($store_name,$address,$street,$user_id,$privileges,$lng,$lat) {
       $this-> utils = new Utils();
-      $this->DB = new DB();
       $this->DB->connect();//连接数据库
       $rescount = $this->checkStores($store_name);
       /*检查是否存在待审核的店铺*/
@@ -59,7 +61,8 @@ include_once './service/session/session.php';
             'address' => $address,
             'street' => $street,
             'create_time' => time(),
-            'geo' => serialize($geo),
+            'lng'=>$lng,
+            'lat'=>$lat,
             'status' => '-1', /*status: -1 待审核 0 审核中 1 已开通 2 已注销*/
            );
           /*insert店铺信息*/
@@ -124,12 +127,13 @@ include_once './service/session/session.php';
   $store_name = trim($_POST['store_name']);
   $address = trim($_POST['address']);
   $street = trim($_POST['street']);
-  $geo = $_POST['geo'];
+  $lng = $_POST['lng'];
+  $lat = $_POST['lat'];
   $user_id = Session::get('uid'); //获取保存的user_id
   $privileges = trim($_POST['privileges']);
   if(!empty($store_name) && !empty($address)) {
        $regisstore = new Applystore();
-       $res = $regisstore->set($store_name,$address,$street,$user_id,$privileges,$geo);
+       $res = $regisstore->set($store_name,$address,$street,$user_id,$privileges,$lng,$lat);
        echo json_encode($res);
   } else {
     if (empty($store_name)) {
