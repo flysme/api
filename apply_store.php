@@ -34,7 +34,7 @@ include_once './service/session/session.php';
       }
       return $flag;
     }
-    public function set ($store_name,$address,$street,$user_id,$privileges,$lng,$lat) {
+    public function set ($store_name,$store_image,$address,$street,$user_id,$privileges,$lng,$lat) {
       $this-> utils = new Utils();
       $this->DB->connect();//连接数据库
       $rescount = $this->checkStores($store_name);
@@ -58,6 +58,7 @@ include_once './service/session/session.php';
           $data = array(
             'store_id' => $this->utils->generateUid(),
             'store_name' => $store_name,
+            'store_image' => $store_image,
             'address' => $address,
             'street' => $street,
             'create_time' => time(),
@@ -127,13 +128,14 @@ include_once './service/session/session.php';
   $store_name = trim($_POST['store_name']);
   $address = trim($_POST['address']);
   $street = trim($_POST['street']);
+  $store_image = trim($_POST['store_image']);
   $lng = $_POST['lng'];
   $lat = $_POST['lat'];
   $user_id = Session::get('uid'); //获取保存的user_id
   $privileges = trim($_POST['privileges']);
   if(!empty($store_name) && !empty($address)) {
        $regisstore = new Applystore();
-       $res = $regisstore->set($store_name,$address,$street,$user_id,$privileges,$lng,$lat);
+       $res = $regisstore->set($store_name,$store_image,$address,$street,$user_id,$privileges,$lng,$lat);
        echo json_encode($res);
   } else {
     if (empty($store_name)) {

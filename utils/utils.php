@@ -37,20 +37,20 @@
      * @param  String $lng2 经二
      * @return float  返回两点之间的距离
      */
-    public function calcDistance($lat1, $lng1, $lat2, $lng2) {
-        /** 转换数据类型为 double */
-        $lat1 = doubleval($lat1);
-        $lng1 = doubleval($lng1);
-        $lat2 = doubleval($lat2);
-        $lng2 = doubleval($lng2);
-        /** 以下算法是 Google 出来的，与大多数经纬度计算工具结果一致 */
-        $theta = $lng1 - $lng2;
-        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-        $dist = acos($dist);
-        $dist = rad2deg($dist);
-        $miles = $dist * 60 * 1.1515;
-        return ($miles * 1.609344);
-    }
+    // public function calcDistance($lat1, $lng1, $lat2, $lng2) {
+    //     /** 转换数据类型为 double */
+    //     $lat1 = doubleval($lat1);
+    //     $lng1 = doubleval($lng1);
+    //     $lat2 = doubleval($lat2);
+    //     $lng2 = doubleval($lng2);
+    //     /** 以下算法是 Google 出来的，与大多数经纬度计算工具结果一致 */
+    //     $theta = $lng1 - $lng2;
+    //     $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+    //     $dist = acos($dist);
+    //     $dist = rad2deg($dist);
+    //     $miles = $dist * 60 * 1.1515;
+    //     return ($miles * 1.609344);
+    // }
     /**
      * 根据经纬度和半径计算出范围
      * @param string $lat 纬度
@@ -58,7 +58,7 @@
      * @param float $radius 半径
      * @return Array 范围数组
      */
-    private function calcScope($lat, $lng, $radius) {
+    public function calcScope($lat, $lng, $radius) {
         $degree = (24901*1609)/360.0;
         $dpmLat = 1/$degree;
 
@@ -77,7 +77,7 @@
             'minLat'    =>  $minLat,
             'maxLat'    =>  $maxLat,
             'minLng'    =>  $minLng,
-            'maxLng'    =>  $maxLng
+            'maxLng'    =>  $maxLng,
             );
         return $scope;
     }

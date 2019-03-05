@@ -23,7 +23,7 @@
     }
     /*店铺地址经纬度*/
     public static function apply($data){
-      return "insert into store(`store_name`, `create_time`, `status`,`address`,`store_id`,`street`,`lng`,`lat`)values('{$data["store_name"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}','{$data["lng"]}','{$data["lat"]}')";
+      return "insert into store(`store_name`,`store_image`, `create_time`, `status`,`address`,`store_id`,`street`,`lng`,`lat`)values('{$data["store_name"]}','{$data["store_image"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}','{$data["lng"]}','{$data["lat"]}')";
     }
     /*获取用户店铺*/
     public static function getStoreList($user_id){
@@ -165,5 +165,10 @@
     /*获取店铺设置信息*/
     public static function getStoreSetting($store_id){
       return "select store_setting.setting_id,store_setting.business_end_times,store_setting.delivery_price,store_setting.delivery_price,store_setting.start_delivery_price,store_setting.discounts,store_setting.business_start_times,store_setting.business_end_times from store_setting where store_id in('{$store_id}')";
+    }
+    // /*----移动端---*/
+    /*获取附近的店铺*/
+    public static function getUserNearStoreList($lat,$lng,$scope) {
+      return "select * from store where lat < {$scope['maxLat']} and lat > {$scope['minLat']} and lng < {$scope['maxLng']} and lng > {$scope['minLng']}";
     }
   }
