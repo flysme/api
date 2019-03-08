@@ -133,21 +133,27 @@ include_once './service/session/session.php';
   $lat = $_POST['lat'];
   $user_id = Session::get('uid'); //获取保存的user_id
   $privileges = trim($_POST['privileges']);
-  if(!empty($store_name) && !empty($address)) {
-       $regisstore = new Applystore();
-       $res = $regisstore->set($store_name,$store_image,$address,$street,$user_id,$privileges,$lng,$lat);
-       echo json_encode($res);
-  } else {
-    if (empty($store_name)) {
-      echo json_encode(array('data' => (object)array(),'msg'=>'店铺名称不能为空', 'status'=>400));
-    }
-    if (empty($address)) {
-      echo json_encode(array('data' => (object)array(),'msg'=>'地址不能为空', 'status'=>400));
-    }
-    if (empty($user_id)) {
-      echo json_encode(array('data' => (object)array(),'msg'=>'user_id不能为空', 'status'=>400));
-    }
-    if (empty($privileges)) {
-      echo json_encode(array('data' => (object)array(),'msg'=>'用户身份不能为空', 'status'=>400));
-    }
+
+  if (empty($store_name)) {
+    echo json_encode(array('data' => (object)array(),'msg'=>'店铺名称不能为空', 'status'=>400));
+  }
+  else if (empty($address)) {
+    echo json_encode(array('data' => (object)array(),'msg'=>'地址不能为空', 'status'=>400));
+  }
+  else if (empty($user_id)) {
+    echo json_encode(array('data' => (object)array(),'msg'=>'user_id不能为空', 'status'=>400));
+  }
+  else if (empty($privileges)) {
+    echo json_encode(array('data' => (object)array(),'msg'=>'用户身份不能为空', 'status'=>400));
+  }
+  else if (empty($privileges)) {
+    echo json_encode(array('data' => (object)array(),'msg'=>'用户身份不能为空', 'status'=>400));
+  }
+  else if (empty($lng) || empty($lat) || empty($street)) {
+    echo json_encode(array('data' => (object)array(),'msg'=>'地址信息不能为空', 'status'=>400));
+  }
+  else {
+    $regisstore = new Applystore();
+    $res = $regisstore->set($store_name,$store_image,$address,$street,$user_id,$privileges,$lng,$lat);
+    echo json_encode($res);
   }

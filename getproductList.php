@@ -9,7 +9,7 @@ include_once './utils/oauth.php';
       foreach ($result as $item) {
         $resarr[$item['product_id']] = array(
           'product_id'=> $item['product_id'],
-          'title'=> base64_decode($item['product_name']),
+          'title'=> $item['product_name'],
           'desc'=>base64_decode($item['product_desc']),
           'img'=> $item['product_img'],
           'category_id'=> $item['category_id'],

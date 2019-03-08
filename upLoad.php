@@ -15,10 +15,9 @@ header("Content-Type:text/html;charset=utf-8");
 class ImgUpload1
 {
     protected static $imgs_file = array();//要返回的数据 （储存的文件信息）
-
+    private $imgcompress;
     function __construct($files)
     {
-
         foreach ($files as $k => $v) {
             $img_info = $files[$k];
             $arr = array();
@@ -54,7 +53,6 @@ class ImgUpload1
 
     protected function _img_store($img_info)
     {
-
         //检测文件是否合法 ---文件名后缀
         $img_hzm = array('.gif', '.png', '.jpg', '.jpeg');
         $re = in_array(strrchr($img_info['name'], '.'), $img_hzm);
@@ -91,6 +89,8 @@ class ImgUpload1
 
         $imgName = MD5(uniqid(rand(), true)) . $imgType;
         $img_file = $path.$imgName;
+        $percent = 1;  #原图压缩，不缩放
+        $dst_img = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
         if ($upload_re) {
             return $imgName;

@@ -8,12 +8,10 @@ include_once './utils/oauth.php';
     function __construct(){
        include_once './config/db.php';
        $this -> DB = new DB();
+       $this->DB->connect();//连接数据库
     }
-    public function mysql () {
-      $this->DB->connect();//连接数据库
-    }
+
     public function set ($cats_name,$store_id) {
-      $this->mysql();
       $utils = new Utils();
       /*
        status: -1 未开通 0 已开通 1 已注销
@@ -37,7 +35,6 @@ include_once './utils/oauth.php';
       return $res;
     }
     public function updatecatesgorys ($catesgory_id,$cats_name) {
-      $this->mysql();
       $data = array(
         'catesgory_id'=>$catesgory_id,
         'cats_name'=>$cats_name,
@@ -54,7 +51,6 @@ include_once './utils/oauth.php';
       return $res;
     }
     public function deletecatesgorys ($catesgory_id) {
-      $this->mysql();
       $delecategorysql = Sql::deletecatesgorys($catesgory_id);
       $result = $this->DB->query($delecategorysql);
       if ($result) {

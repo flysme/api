@@ -4,7 +4,6 @@ include_once './config/sql.php';
 include_once './utils/oauth.php';
 include_once './service/session/session.php';
 include_once './utils/utils.php';
-
   class Store_setting {
     public $DB;
     function __construct(){
@@ -70,7 +69,7 @@ include_once './utils/utils.php';
         $business_start_times = $data['business_start_times'];
         $business_end_times = $data['business_end_times'];
       } else {
-        $setting_id = $this->utils->generateUid();
+        $setting_id = $utils->generateUid();
         $store_id = trim($_POST['store_id']);
         $delivery_price = trim($_POST['delivery_price']);
         $start_delivery_price = trim($_POST['start_delivery_price']);

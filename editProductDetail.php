@@ -10,7 +10,7 @@ include_once './utils/oauth.php';
   $DB->connect();//连接数据库
   $utils = new Utils();
   $ischeck = true;
-  $product_name=base64_encode(trim($_POST['products_name']));
+  $product_name=trim($_POST['products_name']);
   $product_id=trim($_POST['product_id']);
   $products_desc=base64_encode(trim($_POST['products_desc']));
   $product_image= $_POST['products_image'];

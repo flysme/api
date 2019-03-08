@@ -27,8 +27,7 @@
     }
     /*获取用户店铺*/
     public static function getStoreList($user_id){
-      $basesql = "select user_store_relation.*,store.* FROM store RIGHT OUTER JOIN user_store_relation ON user_store_relation.store_id = store.store_id";
-      $sql = "{$basesql} where user_id='{$user_id}'";
+      $sql = "select user_store_relation.*,store.* FROM store LEFT JOIN user_store_relation ON store.store_id = user_store_relation.store_id where user_id='{$user_id}'";
       return $sql;
     }
     /*关联店铺与用户*/
@@ -90,9 +89,9 @@
     /*新增sku*/
     public static function createSkuProducts($data){
       $utils = new Utils();
-      $sku_id = $utils->generateUid();
       $insert = "insert into product_specs (`sku_id`,`product_id`,`product_num`,`product_price`,`product_specs`,`product_img`, `upts_time`, `create_time`) values ";
       foreach($data as $value){
+        $sku_id = $utils->generateUid();
         $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
       };
       $insert = chop($insert,',');
@@ -126,11 +125,9 @@
       $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1)  limit {$data['currentPage']}, {$data['pageSize']}";
       if (!empty($data['catesgory_id'])) {
         $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and category_id='{$data['catesgory_id']}' limit {$data['currentPage']}, {$data['pageSize']}";
-      }
-      if (!empty($data['product_name'])) {
+      } else if (!empty($data['product_name'])) {
         $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and product_name like '%{$data['product_name']}%'  limit {$data['currentPage']}, {$data['pageSize']}";
-      }
-      if (!empty($data['catesgory_id']) && !empty($data['product_name'])){
+      } else if (!empty($data['catesgory_id']) && !empty($data['product_name'])){
         $sql = "{$basesql} where store_id='{$data['store_id']}' and status in(0,1) and category_id='{$data['catesgory_id']}' and product_name like '%{$data['product_name']}%' limit {$data['currentPage']}, {$data['pageSize']}";
       }
       return $sql;
@@ -153,7 +150,7 @@
         $product_id = reset($product_ids);
         $sql = "update product set status={$status} where product_id= '{$product_id}'";
       } else {
-        $product_ids = implode(",",$product_ids);
+        $product_ids = implode("','",$product_ids);
         $sql = "update product set status={$status} where product_id in('{$product_ids}')";
       }
       return $sql;
@@ -168,7 +165,19 @@
     }
     // /*----移动端---*/
     /*获取附近的店铺*/
-    public static function getUserNearStoreList($lat,$lng,$scope) {
-      return "select * from store where lat < {$scope['maxLat']} and lat > {$scope['minLat']} and lng < {$scope['maxLng']} and lng > {$scope['minLng']}";
+    public static function getUserNearStoreList($lat,$lng,$scope,$offset=0,$pagesize=10) {
+      return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where lat<>0 and lat>{$scope['right-bottom']['lat']} and lat<{$scope['left-top']['lat']} and lng>{$scope['left-top']['lng']} and lng<{$scope['right-bottom']['lng']} and status in(1) limit {$offset},{$pagesize}";
+      // return "select * from store where lat < {$scope['maxLat']} and lat > {$scope['minLat']} and lng < {$scope['maxLng']} and lng > {$scope['minLng']}";
+    }
+    /*获取店铺商品*/
+    public static function getUserStoreTradingsList($store_id,$category_id) {
+        $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs FROM product LEFT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+        $sql = isset($category_id) && !empty($category_id) ?   "{$basesql} where product.status in(1) and product.store_id='{$store_id}' and product.category_id='{$category_id}'" : "{$basesql} where product.status in(1) and product.store_id='{$store_id}'";
+      return $sql;
+    }
+    /*获取店铺信息*/
+    public static function getStoreInfo($store_id) {
+        $basesql = "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.discounts FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
+      return $basesql;
     }
   }

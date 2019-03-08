@@ -21,6 +21,7 @@ include_once './service/session/session.php';
           $resstore = array(
             'store_id' =>$resultstore['store_id'],
             'name' =>$resultstore['store_name'],
+            'img' =>$resultstore['store_image'],
             'create_time' =>$resultstore['create_time'],
             'address' =>$resultstore['address'],
             'street' =>$resultstore['street'],
