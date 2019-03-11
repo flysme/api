@@ -157,17 +157,20 @@
     }
     /*新增店铺设置*/
     public static function storeSetting($data){
-      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`discounts`,`business_start_times`,`business_end_times`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}','{$data["delivery_price"]}','{$data["start_delivery_price"]}','{$data["discounts"]}','{$data["business_start_times"]}','{$data["business_end_times"]}','{$data["create_time"]}')";
+      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`discounts`,`business_start_times`,`business_end_times`,`business_status`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}','{$data["delivery_price"]}','{$data["start_delivery_price"]}','{$data["discounts"]}','{$data["business_start_times"]}','{$data["business_end_times"]}',{$data["business_status"]},'{$data["create_time"]}')";
     }
     /*获取店铺设置信息*/
     public static function getStoreSetting($store_id){
-      return "select store_setting.setting_id,store_setting.business_end_times,store_setting.delivery_price,store_setting.delivery_price,store_setting.start_delivery_price,store_setting.discounts,store_setting.business_start_times,store_setting.business_end_times from store_setting where store_id in('{$store_id}')";
+      return "select store_setting.setting_id,store_setting.business_end_times,store_setting.delivery_price,store_setting.delivery_price,store_setting.start_delivery_price,store_setting.discounts,store_setting.business_start_times,store_setting.business_end_times,store_setting.business_status from store_setting where store_id in('{$store_id}')";
     }
     // /*----移动端---*/
     /*获取附近的店铺*/
-    public static function getUserNearStoreList($lat,$lng,$scope,$offset=0,$pagesize=10) {
-      return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where lat<>0 and lat>{$scope['right-bottom']['lat']} and lat<{$scope['left-top']['lat']} and lng>{$scope['left-top']['lng']} and lng<{$scope['right-bottom']['lng']} and status in(1) limit {$offset},{$pagesize}";
+    public static function getUserNearStoreList($storeName,$lat,$lng,$scope,$offset=0,$pagesize=10) {
       // return "select * from store where lat < {$scope['maxLat']} and lat > {$scope['minLat']} and lng < {$scope['maxLng']} and lng > {$scope['minLng']}";
+      if (empty($storeName)) {
+        return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where lat<>0 and lat>{$scope['right-bottom']['lat']} and lat<{$scope['left-top']['lat']} and lng>{$scope['left-top']['lng']} and lng<{$scope['right-bottom']['lng']} and status in(1) limit {$offset},{$pagesize}";
+      }
+      return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where lat<>0 and lat>{$scope['right-bottom']['lat']} and lat<{$scope['left-top']['lat']} and lng>{$scope['left-top']['lng']} and lng<{$scope['right-bottom']['lng']} and status in(1) and POSITION('{$storeName}' IN `store_name`) limit {$offset},{$pagesize}";
     }
     /*获取店铺商品*/
     public static function getUserStoreTradingsList($store_id,$category_id) {
@@ -177,7 +180,7 @@
     }
     /*获取店铺信息*/
     public static function getStoreInfo($store_id) {
-        $basesql = "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.discounts FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
+        $basesql = "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.discounts,store_setting.business_status FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
       return $basesql;
     }
   }

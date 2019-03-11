@@ -28,8 +28,8 @@ include_once './utils/utils.php';
               'delivery_price'=>($resultstore['delivery_price']),
               'business_start_times'=>($resultstore['business_start_times']),
               'business_end_times'=>($resultstore['business_end_times']),
-              'discounts' => unserialize($resultstore['discounts']),
-              'is_business' => $this -> utils->checkIsBetweenTime($resultstore['business_start_times'],$resultstore['business_end_times']) //判断是否营业
+              'discounts' => !empty($resultstore['discounts']) ? unserialize($resultstore['discounts']) :null,
+              'is_business' =>  intval($resultstore['business_status'] && $this -> utils->checkIsBetweenTime($resultstore['business_start_times'],$resultstore['business_end_times'])) //判断是否营业
             ),
           );
            $res = (object)array('data' => (object)array('store'=>$resstore),'msg'=>'', 'status'=>0);

@@ -4,13 +4,15 @@ include_once './config/db.php';
 include_once './config/sql.php';
 include_once './config/sql.php';
   class Get_storeList {
-    public $utils;
-    public $lat;
-    public $lng;
-    public $cursor;
-    function __construct($lat,$lng,$cursor){
+    private $utils;
+    private $name;
+    private $lat;
+    private $lng;
+    private $cursor;
+    function __construct($name,$lat,$lng,$cursor){
        include_once './utils/utils.php';
        $this -> utils = new Utils();
+       $this -> name = $name;
        $this -> lat = $lat;
        $this -> lng = $lng;
        $this -> cursor = $cursor;
@@ -32,7 +34,7 @@ include_once './config/sql.php';
             'start_delivery_price' => intval($value['start_delivery_price']),
             'distance' =>$this -> utils-> getDistance( $value['lng'],$value['lat'],  $this -> lng,$this -> lat,2,1),
             'discounts' => unserialize($value['discounts']),
-            'is_business' => $this -> utils->checkIsBetweenTime($value['business_start_times'],$value['business_end_times']) //判断是否营业
+            'is_business' =>intval($value['business_status'] && $this -> utils->checkIsBetweenTime($value['business_start_times'],$value['business_end_times'])) //判断是否营业
           ),
          );
          $resetdata[] = array_merge($item);
@@ -44,7 +46,7 @@ include_once './config/sql.php';
       $pageSize = 10;
       $offset =  ($this -> cursor -1) * $pageSize; //单位公里
       $scope = $this -> utils->returnSquarePoint($this -> lat, $this -> lng, $radius);
-      $storesql = Sql::getUserNearStoreList($this -> lat,$this -> lng,$scope,$offset,$pageSize);
+      $storesql = Sql::getUserNearStoreList($this -> name,$this -> lat,$this -> lng,$scope,$offset,$pageSize);
       $DB = new DB();
       $DB->connect();//连接数据库
       $result = $DB->getAll($storesql);
@@ -60,7 +62,8 @@ include_once './config/sql.php';
   }
     $lat=$_GET['lat'];
     $lng=$_GET['lng'];
+    $name=isset($_GET['name']) ? trim($_GET['name']) : '';
     $cursor= empty($_GET['cursor']) ?  1 : $_GET['cursor'];
-    $stores = new Get_storeList($lat,$lng,$cursor);
+    $stores = new Get_storeList($name,$lat,$lng,$cursor);
     $res = $stores->getStoreList();
     echo json_encode($res);

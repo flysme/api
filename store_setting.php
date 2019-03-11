@@ -15,10 +15,11 @@ include_once './utils/utils.php';
       $this->DB->connect();//连接数据库
       $get_store_setting = Sql::getStoreSetting($store_id);
       $result = $this->DB->getData($get_store_setting);
+      $result['business_status'] = intval($result['business_status']);
       $result['discounts'] = !empty($result['discounts']) ? unserialize($result['discounts']) :$result['discounts'];
       return $res = (object)array('data' => $result,'msg'=>'', 'status'=>0);
     }
-    public function setting ($setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times) {
+    public function setting ($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times) {
       $this->DB->connect();//连接数据库
       $data = array(
         'setting_id' => $setting_id,
@@ -28,6 +29,7 @@ include_once './utils/utils.php';
         'discounts' => $discounts,//满减列表
         'business_start_times' => $business_start_times, //开始营业时间
         'business_end_times' => $business_end_times, //结束营业时间
+        'business_status' => intval($business_status), //是否营业
         'create_time' => time()
        );
       /*insert店铺设置信息*/
@@ -68,6 +70,7 @@ include_once './utils/utils.php';
         $discounts = serialize($data['discounts']);
         $business_start_times = $data['business_start_times'];
         $business_end_times = $data['business_end_times'];
+        $business_status = $data['business_status'];
       } else {
         $setting_id = $utils->generateUid();
         $store_id = trim($_POST['store_id']);
@@ -76,9 +79,10 @@ include_once './utils/utils.php';
         $discounts = serialize($_POST['discounts']);
         $business_start_times = trim($_POST['business_start_times']);
         $business_end_times = trim($_POST['business_end_times']);
+        $business_status = $_POST['business_status'];
       }
     if(!empty($store_id)) {
-         $res = $storesetting->setting($setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times);
+         $res = $storesetting->setting($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times);
          echo json_encode($res);
     } else {
       if (empty($store_id)) {
