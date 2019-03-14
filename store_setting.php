@@ -16,7 +16,6 @@ include_once './utils/utils.php';
       $get_store_setting = Sql::getStoreSetting($store_id);
       $result = $this->DB->getData($get_store_setting);
       $result['business_status'] = intval($result['business_status']);
-      $result['discounts'] = !empty($result['discounts']) ? unserialize($result['discounts']) :$result['discounts'];
       return $res = (object)array('data' => $result,'msg'=>'', 'status'=>0);
     }
     public function setting ($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times) {
