@@ -8,7 +8,7 @@ RewriteRule ^deleteCatesgorys$ deleteCatesgorys.php
 RewriteRule ^edit_category$ edit_category.php
 RewriteRule ^editProductDetail$ editProductDetail.php
 RewriteRule ^getProductcategory$ getProductcategory.php
-RewriteRule ^getProductDetail/(.+)$ getProductDetail.php?product_id=$product_id
+RewriteRule ^getProductDetail/(.+)$ getProductDetail.php?product_id=$1
 RewriteRule ^getProductDetail$ getProductDetail.php
 RewriteRule ^getproductList$ getproductList.php
 RewriteRule ^getStoreList$ getStoreList.php
