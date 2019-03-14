@@ -157,7 +157,7 @@
     }
     /*新增店铺设置*/
     public static function storeSetting($data){
-      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`discounts`,`business_start_times`,`business_end_times`,`business_status`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}','{$data["delivery_price"]}','{$data["start_delivery_price"]}','{$data["discounts"]}','{$data["business_start_times"]}','{$data["business_end_times"]}',{$data["business_status"]},'{$data["create_time"]}')";
+      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`business_start_times`,`business_end_times`,`business_status`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}','{$data["delivery_price"]}','{$data["start_delivery_price"]}','{$data["business_start_times"]}','{$data["business_end_times"]}',{$data["business_status"]},'{$data["create_time"]}')";
     }
     /*获取店铺设置信息*/
     public static function getStoreSetting($store_id){

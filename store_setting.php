@@ -25,7 +25,6 @@ include_once './utils/utils.php';
         'store_id' => $store_id,//店铺id
         'delivery_price' => $delivery_price, //配送费
         'start_delivery_price' => $start_delivery_price, //起送金额
-        'discounts' => $discounts,//满减列表
         'business_start_times' => $business_start_times, //开始营业时间
         'business_end_times' => $business_end_times, //结束营业时间
         'business_status' => intval($business_status), //是否营业
@@ -66,7 +65,6 @@ include_once './utils/utils.php';
         $store_id = $data['store_id'];
         $delivery_price = $data['delivery_price'];
         $start_delivery_price = $data['start_delivery_price'];
-        $discounts = serialize($data['discounts']);
         $business_start_times = $data['business_start_times'];
         $business_end_times = $data['business_end_times'];
         $business_status = $data['business_status'];
@@ -75,7 +73,6 @@ include_once './utils/utils.php';
         $store_id = trim($_POST['store_id']);
         $delivery_price = trim($_POST['delivery_price']);
         $start_delivery_price = trim($_POST['start_delivery_price']);
-        $discounts = serialize($_POST['discounts']);
         $business_start_times = trim($_POST['business_start_times']);
         $business_end_times = trim($_POST['business_end_times']);
         $business_status = $_POST['business_status'];
