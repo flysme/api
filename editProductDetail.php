@@ -12,7 +12,7 @@ include_once './utils/oauth.php';
   $ischeck = true;
   $product_name=trim($_POST['products_name']);
   $product_id=trim($_POST['product_id']);
-  $products_desc=base64_encode(trim($_POST['products_desc']));
+  $products_desc=trim($_POST['products_desc']);
   $product_image= $_POST['products_image'];
   $store_id=trim($_POST['store_id']);
   $attribute_list=$_POST['attributes'];
