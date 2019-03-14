@@ -161,7 +161,7 @@
     }
     /*获取店铺设置信息*/
     public static function getStoreSetting($store_id){
-      return "select store_setting.setting_id,store_setting.business_end_times,store_setting.delivery_price,store_setting.delivery_price,store_setting.start_delivery_price,store_setting.discounts,store_setting.business_start_times,store_setting.business_end_times,store_setting.business_status from store_setting where store_id in('{$store_id}')";
+      return "select store_setting.setting_id,store_setting.business_end_times,store_setting.delivery_price,store_setting.delivery_price,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_end_times,store_setting.business_status from store_setting where store_id in('{$store_id}')";
     }
     // /*----移动端---*/
     /*获取附近的店铺*/
