@@ -69,6 +69,8 @@ include_once './utils/oauth.php';
   $categorys = new Create_categorys();
   $data = $utils->getParams();
   /*更新分类*/
+  var_dump($data);
+  exit();
   if($utils->isPut()) {
     if(empty($data['catesgory_id'])) {
         $ischeck = array('data' => (object)array(),'msg'=>'分类id未知', 'status'=>400);
