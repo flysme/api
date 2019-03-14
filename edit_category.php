@@ -63,7 +63,7 @@ include_once './utils/oauth.php';
     }
   }
   /*验证登录*/
-  Oauth::checkLogin();
+  // Oauth::checkLogin();
   $utils = new Utils();
   $ischeck = true;
   $categorys = new Create_categorys();
