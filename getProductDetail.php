@@ -75,8 +75,6 @@ include_once './utils/oauth.php';
   Oauth::checkLogin();
   $ischeck = true;
   $product_id=$_GET['product_id'];
-  var_dump($_GET);
-  exit();
   if(empty($product_id)) {
       $ischeck = array('data' => (object)array(),'msg'=>'商品id未知', 'status'=>400);
   }
