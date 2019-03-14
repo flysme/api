@@ -13,6 +13,17 @@
         $uuid = substr($charid, 0, 8).substr($charid, 8, 4).substr($charid,12, 4).substr($charid,16, 4).substr($charid,20,12);
       return $uuid;
     }
+    //获取随机数
+    function GetRandStr($length){
+      $str='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      $len=strlen($str)-1;
+      $randstr='';
+      for($i=0;$i<$length;$i++){
+        $num=mt_rand(0,$len);
+        $randstr .= $str[$num];
+      }
+      return $randstr;
+    }
     /*判断put请求*/
     public function isPut(){
       return $_SERVER['REQUEST_METHOD'] == 'PUT' ? true : false;
@@ -174,6 +185,17 @@
               $result = 1;
           }
           return $result;
+      }
+      public function objectToarray($object) {
+        if (is_object($object)) {
+          foreach ($object as $key => $value) {
+            $array[$key] = $value;
+          }
+        }
+        else {
+          $array = $object;
+        }
+        return $array;
       }
 
   }

@@ -23,12 +23,10 @@ include_once './utils/utils.php';
             'title' =>$resultstore['store_name'],
             'img' =>$resultstore['store_image'],
             'setting' =>array(
-              'discounts'=>unserialize($resultstore['discounts']),
-              'start_delivery_price'=>($resultstore['start_delivery_price']),
-              'delivery_price'=>($resultstore['delivery_price']),
+              'start_delivery_price'=>intval($resultstore['start_delivery_price']),
+              'delivery_price'=>intval($resultstore['delivery_price']),
               'business_start_times'=>($resultstore['business_start_times']),
               'business_end_times'=>($resultstore['business_end_times']),
-              'discounts' => !empty($resultstore['discounts']) ? unserialize($resultstore['discounts']) :null,
               'is_business' =>  intval($resultstore['business_status'] && $this -> utils->checkIsBetweenTime($resultstore['business_start_times'],$resultstore['business_end_times'])) //判断是否营业
             ),
           );

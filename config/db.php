@@ -3,10 +3,10 @@
          public $links;//链接名称
          //构造方法的参数和属性名字一致，但是含义不同
          public function connect(){
-             $db_host = "127.0.0.1";//localhost
-             $db_user = "root";//用户名
-             $db_pwd = "D8B7d904e33e";//密码
-             $db_name = "saas";//数据库名
+             $db_host = "hdm131470340.my3w.com";//localhost
+             $db_user = "hdm131470340";//用户名
+             $db_pwd = "zfxyyc0822,,";//密码
+             $db_name = "hdm131470340_db";//数据库名
              //链接数据库代码
              $this->links = new mysqli($db_host,$db_user,$db_pwd,$db_name);
              !mysqli_connect_error() or die("连接失败！！");

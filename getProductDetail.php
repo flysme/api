@@ -17,19 +17,18 @@ include_once './utils/oauth.php';
           $resarr[$item['product_id']] = array(
             'product_id'=> $item['product_id'],
             'title'=> $item['product_name'],
-            'desc'=>base64_decode($item['product_desc']),
+            'desc'=>$item['product_desc'],
             'img'=> $item['product_img'],
             'category_id'=> $item['category_id'],
             'store_id'=> $item['store_id'],
             'num'=> $item['product_num'],
             'status'=> $item['status'],
-            '规格;'=> $item['status'],
             'product_unit'=> $item['product_unit'],
             'create_time'=> date("Y-m-d H:i:s",$item['create_time']),
             'skus'=> !is_array($resarr[$item['product_id']]['skus']) ? array() : $resarr[$item['product_id']]['skus'],
             'skusMap'=> $productDetailSpecData,
           );
-          $resarr[$item['product_id']]['skus'][$sku_map_k] = array('sku_id'=>$item['sku_id'],'price'=>$item['product_price'],'num'=>$item['product_num'],'product_specs'=>$skuSpecItem);
+          $resarr[$item['product_id']]['skus'][$sku_map_k] = array('sku_id'=>$item['sku_id'],'price'=>floatval($item['product_price']),'num'=>intval($item['product_num']),'cost_price'=>floatval($item['cost_price']),'product_specs'=>$skuSpecItem);
       }
       return reset(array_values($resarr));
     }

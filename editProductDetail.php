@@ -21,22 +21,18 @@ include_once './utils/oauth.php';
   $skus=$_POST['skus'];
     /*组织sku数据格式*/
     $skusspecItem = array();
+    $kmapping = array('num','price','cost_price');
     foreach($skus as $key=>$value){
       foreach($value as $item){
-        if ($item['k']!='num' && $item['k']!='price') {
+        if (!in_array($item['k'],$kmapping)) {
           if (!is_array($skusspecItem[$key]['skuspecs'])) {
             $skusspecItem[$key]['skuspecs'] = array();
           }
           $skusspecItem[$key]['skuspecs'][] = $item['n'].':'.$item['v'];
-        }
-        if ($item['k']=='num') {
-          $skusspecItem[$key]['num'] = $item['v'];
-        }
-        if ($item['k']=='price') {
-          $skusspecItem[$key]['price'] = $item['v'];
+        } else {
+          $skusspecItem[$key][$item['k']] = $item['v'];
         }
       }
-
     }
     /*校验必填字段*/
   if(empty($product_name)) {
@@ -120,10 +116,11 @@ include_once './utils/oauth.php';
                  foreach ($skusspecItem as $value) {
                    $skuInsertList[] = array(
                      'product_id'=>$product_id,
-                     'product_num'=>$value['num'],
-                     'product_price'=>$value['price'],
-                     'product_specs'=>implode(",", $value['skuspecs']),
-                     'product_img'=>'',
+                     'product_num'=>$value['num'], //库存
+                     'product_price'=>$value['price'],  //零售价
+                     'product_cost_price'=>$value['cost_price'], //成本价
+                     'product_specs'=>implode(",", $value['skuspecs']), //sku属性
+                     'product_img'=>'',//sku图片
                    );
                  }
                  /*插入sku记录*/

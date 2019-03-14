@@ -11,7 +11,7 @@ include_once './utils/oauth.php';
   $utils = new Utils();
   $ischeck = true;
   $product_name=trim($_POST['products_name']);
-  $products_desc=base64_encode(trim($_POST['products_desc']));
+  $products_desc=trim($_POST['products_desc']);
   $product_image= $_POST['products_image'];
   $store_id=trim($_POST['store_id']);
   $attribute_list=$_POST['attributes'];
@@ -20,19 +20,16 @@ include_once './utils/oauth.php';
   $skus=$_POST['skus'];
     /*组织sku数据格式*/
     $skusspecItem = array();
+    $kmapping = array('num','price','cost_price');
     foreach($skus as $key=>$value){
       foreach($value as $item){
-        if ($item['k']!='num' && $item['k']!='price') {
+        if (!in_array($item['k'],$kmapping)) {
           if (!is_array($skusspecItem[$key]['skuspecs'])) {
             $skusspecItem[$key]['skuspecs'] = array();
           }
           $skusspecItem[$key]['skuspecs'][] = $item['n'].':'.$item['v'];
-        }
-        if ($item['k']=='num') {
-          $skusspecItem[$key]['num'] = $item['v'];
-        }
-        if ($item['k']=='price') {
-          $skusspecItem[$key]['price'] = $item['v'];
+        } else {
+          $skusspecItem[$key][$item['k']] = $item['v'];
         }
       }
     }
@@ -123,6 +120,7 @@ include_once './utils/oauth.php';
                        'product_id'=>$currentresult['product_id'],
                        'product_num'=>$value['num'],
                        'product_price'=>$value['price'],
+                       'product_cost_price'=>$value['cost_price'],
                        'product_specs'=>implode(",", $value['skuspecs']),
                        'product_img'=>'',
                      );

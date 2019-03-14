@@ -18,7 +18,7 @@ include_once './utils/utils.php';
       $result['business_status'] = intval($result['business_status']);
       return $res = (object)array('data' => $result,'msg'=>'', 'status'=>0);
     }
-    public function setting ($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times) {
+    public function setting ($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$business_start_times,$business_end_times) {
       $this->DB->connect();//连接数据库
       $data = array(
         'setting_id' => $setting_id,
@@ -63,10 +63,10 @@ include_once './utils/utils.php';
         $data = $utils->getParams();
         $setting_id = $data['setting_id'];
         $store_id = $data['store_id'];
-        $delivery_price = $data['delivery_price'];
-        $start_delivery_price = $data['start_delivery_price'];
-        $business_start_times = $data['business_start_times'];
-        $business_end_times = $data['business_end_times'];
+        $delivery_price = trim($data['delivery_price']);
+        $start_delivery_price = trim($data['start_delivery_price']);
+        $business_start_times = trim($data['business_start_times']);
+        $business_end_times = trim($data['business_end_times']);
         $business_status = $data['business_status'];
       } else {
         $setting_id = $utils->generateUid();
@@ -78,7 +78,7 @@ include_once './utils/utils.php';
         $business_status = $_POST['business_status'];
       }
     if(!empty($store_id)) {
-         $res = $storesetting->setting($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$discounts,$business_start_times,$business_end_times);
+         $res = $storesetting->setting($business_status,$setting_id,$store_id,$delivery_price,$start_delivery_price,$business_start_times,$business_end_times);
          echo json_encode($res);
     } else {
       if (empty($store_id)) {
