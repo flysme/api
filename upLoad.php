@@ -13,7 +13,7 @@ header("Content-Type:text/html;charset=utf-8");
  * */
 
 
- public function UpHeardimage() {
+ // public function UpHeardimage() {
       var_dump($_FILES);
     //    if (isset($_FILES['image'])) {
     //
@@ -50,9 +50,9 @@ header("Content-Type:text/html;charset=utf-8");
     //
     //        }
     // }
-}
+// }
 
-UpHeardimage();
+// UpHeardimage();
 
 // class ImgUpload1
 // {
