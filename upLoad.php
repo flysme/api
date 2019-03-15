@@ -63,13 +63,6 @@ class ImgUpload1
         if (explode('/', $img_info['type'])[0] !== 'image') {
             return '该图片不合法-MIME';
         }
-        //检测文件是否合法 ---MIME php检测本地的临时文件
-        //        这里要修改php.ini 增加php_fileinfo.dll模块
-        $file_info = new Finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $file_info->file($img_info['tmp_name']);
-        if (explode('/', $mime_type)[0] !== 'image') {
-            return '该图片不合法-MIME';
-        }
         //检测文件大小 设为1mb
         if ($img_info['size'] > 1000000) {
             return '该图片不合法-文件大于1000kb';
@@ -92,6 +85,8 @@ class ImgUpload1
         $percent = 1;  #原图压缩，不缩放
         $dst_img = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
+        echo $img_file;
+        exit();
         if ($upload_re) {
             return $imgName;
         } else {
@@ -116,4 +111,4 @@ class ImgUpload1
 }
 
 $img_upload = new ImgUpload1($_FILES);
-echo json_encode((object)array('data' => $img_upload->imgs_file()));
+// echo json_encode((object)array('data' => $img_upload->imgs_file()));
