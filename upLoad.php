@@ -93,6 +93,8 @@ class ImgUpload1
         $dst_img = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
         if ($upload_re) {
+          echo $imgName;
+          exit();
             return $imgName;
         } else {
             return false;
@@ -102,8 +104,6 @@ class ImgUpload1
     public function imgs_file()
     {
         $arr = static::$imgs_file;
-        var_dump($arr);
-        exit();
         foreach ($arr as $k => $v) {
 
 
