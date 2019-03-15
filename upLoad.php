@@ -7,10 +7,11 @@ header("Content-Type:text/html;charset=utf-8");
  * Date: 2018/4/26
  * Time: 13:23
  */
+define('ROOT',dirname(__FILE__).'/');
 
      $imgname = $_FILES['file']['name'];
      $tmp = $_FILES['file']['tmp_name'];
-     $filepath = $_SERVER['DOCUMENT_ROOT'].'/api/imgs/';
+     $filepath = ROOT.'/api/imgs/';
      if(move_uploaded_file($tmp,$filepath.$imgname.".png")){
          echo "上传成功";
      }else{
