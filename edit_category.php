@@ -69,8 +69,7 @@ include_once './utils/oauth.php';
   $categorys = new Create_categorys();
   $data = $utils->getParams();
   /*更新分类*/
-  // var_dump($data);
-  print_r($_SERVER['QUERY_STRING']);
+  var_dump($_SERVER['QUERY_STRING']);
   exit();
   if($utils->isPut()) {
     if(empty($data['catesgory_id'])) {
