@@ -25,6 +25,10 @@ include_once './service/session/session.php';
       }
       return $res;
     }
+    public function buildToken ($user_id,$password) {
+        $token = md5($user_id.md5($password).date('Y-m-d', time()));
+      return $token;
+    }
     public function set ($username,$password) {
       /*
        status: -1 未开通 0 已开通 1 已注销
@@ -48,7 +52,10 @@ include_once './service/session/session.php';
           $resultdefaultstore = $DB->getData($getdefaultStoresql);
           $store_id = isset($resultdefaultstore['store_id']) ?  $resultdefaultstore['store_id'] :'';
           $resinfo = (object)array('user_name'=>$username,'store_id'=>$store_id,'store_info'=>$info);
-          Session::set('uid', $result['user_id'], 1800); //设置session
+          Session::set('uid', $result['user_id'], 8000); //设置session
+          $token = $this->buildToken($result['user_id'],$password);
+          Session::set('token', $token, 8000); //设置session
+          header('token:'.$token); //设置响应头
           $res =  (object)array('data' =>$resinfo,'msg'=>'登录成功', 'status'=>0);
         }
       }
