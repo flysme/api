@@ -17,8 +17,6 @@ include_once './utils/oauth.php';
         'upts_time'=>time()
       );
       $upcategorysql = Sql::updateProductcategory($data);
-      echo $upcategorysql;
-      exit();
       $result = $this->DB->query($upcategorysql);
       if ($result) {
           $res = (object)array('data' => (object)array(),'msg'=>'', 'status'=>0);
@@ -37,14 +35,13 @@ include_once './utils/oauth.php';
   $data = $utils->getParams();
   /*更新分类*/
   parse_str($_SERVER['QUERY_STRING']);
-  echo $catesgory_id;
   if($utils->isPut()) {
     if(empty($catesgory_id)) {
         $ischeck = array('data' => (object)array(),'msg'=>'分类id未知', 'status'=>400);
     } else if(empty($data['cats_name'])) {
         $ischeck = $ischeck = array('data' => (object)array(),'msg'=>'请填写分类名称', 'status'=>400);
     }
-    $res = $categorys->updatecatesgorys($data['catesgory_id'],$data['cats_name']);
+    $res = $categorys->updatecatesgorys($catesgory_id,$data['cats_name']);
   }
 
   if (is_array($ischeck)) {
