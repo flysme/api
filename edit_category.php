@@ -17,18 +17,9 @@ include_once './utils/oauth.php';
         'upts_time'=>time()
       );
       $upcategorysql = Sql::updateProductcategory($data);
+      echo $upcategorysql;
+      exit();
       $result = $this->DB->query($upcategorysql);
-      if ($result) {
-          $res = (object)array('data' => (object)array(),'msg'=>'', 'status'=>0);
-      } else {
-        $res = (object) array('data' => (object)array(),'msg'=>$this->DB->links->error, 'status'=>400);
-      }
-      $this->DB->links->close();
-      return $res;
-    }
-    public function deletecatesgorys ($catesgory_id) {
-      $delecategorysql = Sql::deletecatesgorys($catesgory_id);
-      $result = $this->DB->query($delecategorysql);
       if ($result) {
           $res = (object)array('data' => (object)array(),'msg'=>'', 'status'=>0);
       } else {
@@ -46,7 +37,6 @@ include_once './utils/oauth.php';
   $data = $utils->getParams();
   /*更新分类*/
   parse_str($_SERVER['QUERY_STRING']);
-  $catesgory_id = trim($catesgory_id);
   if($utils->isPut()) {
     if(empty($catesgory_id)) {
         $ischeck = array('data' => (object)array(),'msg'=>'分类id未知', 'status'=>400);
