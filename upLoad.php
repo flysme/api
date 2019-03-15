@@ -85,7 +85,7 @@ class ImgUpload1
         $percent = 1;  #原图压缩，不缩放
         $dst_img = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
-        echo $img_file;
+        echo $upload_re;
         exit();
         if ($upload_re) {
             return $imgName;
