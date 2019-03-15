@@ -10,11 +10,10 @@ class Oauth {
       echo json_encode((object)array('data' => (object)array(),'msg'=>'非法访问', 'status'=>401));
       exit();
     }
-    var_dump($_SERVER);
-    exit();
-    // if ( !empty(Session::get('token')) && empty(Session::get('token')) !== ) {
-    //   echo json_encode((object)array('data' => (object)array(),'msg'=>'非法访问', 'status'=>401));
-    //   exit();
-    // }
+    $token = $_SERVER['HTTP_AUTHENTICATION_TOKEN'];
+    if ( !empty(Session::get('token')) && Session::get('token') !== $token) {
+      echo json_encode((object)array('data' => (object)array(),'msg'=>'非法访问', 'status'=>401));
+      exit();
+    }
   }
 }
