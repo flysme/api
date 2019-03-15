@@ -81,7 +81,7 @@ class ImgUpload1
         };
 
         //设置上传文件地址
-        $path = $_SERVER['DOCUMENT_ROOT'].'/imgs/';
+        $path = './imgs/';
         if (!is_dir($path)) {
             mkdir("$path");
         }
@@ -93,8 +93,6 @@ class ImgUpload1
         $dst_img = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
         if ($upload_re) {
-          echo $imgName;
-          exit();
             return $imgName;
         } else {
             return false;
