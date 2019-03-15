@@ -82,7 +82,7 @@ class ImgUpload1
         };
         define('BASE_PATH',str_replace('\\','/',realpath(dirname(__FILE__).'/'))."/");
         //设置上传文件地址
-        $path = '../img/';
+        $path = './img/';
         if (!is_dir($path)) {
             mkdir("$path");
         }
