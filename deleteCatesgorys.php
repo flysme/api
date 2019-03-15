@@ -28,8 +28,6 @@ include_once './utils/oauth.php';
   $ischeck = true;
   $categorys = new Dlete_categorys();
   parse_str($_SERVER['QUERY_STRING']);
-  echo $catesgory_id;
-  exit();
   if(empty($catesgory_id)) {
       $ischeck = array('data' => (object)array(),'msg'=>'分类id未知', 'status'=>400);
   }
