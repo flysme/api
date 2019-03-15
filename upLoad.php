@@ -23,7 +23,7 @@ header("Content-Type:text/html;charset=utf-8");
 class ImgUpload1
 {
     protected static $imgs_file = array();//要返回的数据 （储存的文件信息）
-    private $imgcompress;
+    public $imgurl;
     function __construct($files)
     {
         foreach ($files as $k => $v) {
@@ -80,7 +80,6 @@ class ImgUpload1
             echo '文件名不合法';
             return false;
         };
-        define('BASE_PATH',str_replace('\\','/',realpath(dirname(__FILE__).'/'))."/");
         //设置上传文件地址
         $path = './img/';
         if (!is_dir($path)) {
@@ -92,6 +91,7 @@ class ImgUpload1
         $img_file = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
         if ($upload_re) {
+            $this-> imgurl = $imgName;
             return $imgName;
         } else {
             return false;
@@ -115,4 +115,4 @@ class ImgUpload1
 }
 
 $img_upload = new ImgUpload1($_FILES);
-echo json_encode((object)array('data' => $img_upload->imgs_file()));
+echo json_encode((object)array('data' => $img_upload->imgurl));
