@@ -37,6 +37,7 @@ include_once './utils/oauth.php';
   $data = $utils->getParams();
   /*更新分类*/
   parse_str($_SERVER['QUERY_STRING']);
+  echo $catesgory_id;
   if($utils->isPut()) {
     if(empty($catesgory_id)) {
         $ischeck = array('data' => (object)array(),'msg'=>'分类id未知', 'status'=>400);
