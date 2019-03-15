@@ -14,42 +14,42 @@ header("Content-Type:text/html;charset=utf-8");
 
 
  public function UpHeardimage() {
-
-       if (isset($_FILES['image'])) {
-
-           //创建指定路径
-           $fileName = $_SERVER['DOCUMENT_ROOT']."/imgs/photo/";
-
-           if (!file_exists($fileName)) {
-
-               //进行文件创建
-               mkdir($fileName,0777,true);
-
-           }
-
-           //进行名称的拼接
-           $imgType = strrchr($_FILES['image']['name'], '.');//文件名后缀
-
-           $imgName = MD5(uniqid(rand(), true)) . $imgType;
-           $img_file = $path.$imgName;
-           //获取上传数据并写入
-           $result = move_uploaded_file($_FILES['image']['tmp_name'],$img_file);
-
-           if ($result) {
-
-               $data = array(
-                   //返回数据
-                   'heardImg' => 'http://'.$_SERVER['HTTP_HOST']."/uploads/photo/".$img_file
-               );
-
-               ResponseTool::jsonReturn(200,'头像上传成功',$data);
-
-           } else {
-
-               ResponseTool::jsonReturn('-3','头像上传失败');
-
-           }
-    }
+      var_dump($_FILES);
+    //    if (isset($_FILES['image'])) {
+    //
+    //        //创建指定路径
+    //        $fileName = $_SERVER['DOCUMENT_ROOT']."/imgs/photo/";
+    //
+    //        if (!file_exists($fileName)) {
+    //
+    //            //进行文件创建
+    //            mkdir($fileName,0777,true);
+    //
+    //        }
+    //
+    //        //进行名称的拼接
+    //        // $imgType = strrchr($_FILES['file']['name'], '.');//文件名后缀
+    //
+    //        // $imgName = MD5(uniqid(rand(), true)) . $imgType;
+    //        $img_file = $path.$imgName;
+    //        //获取上传数据并写入
+    //        $result = move_uploaded_file($_FILES['image']['tmp_name'],$img_file);
+    //
+    //        if ($result) {
+    //
+    //            $data = array(
+    //                //返回数据
+    //                'heardImg' => 'http://'.$_SERVER['HTTP_HOST']."/uploads/photo/".$img_file
+    //            );
+    //
+    //            ResponseTool::jsonReturn(200,'头像上传成功',$data);
+    //
+    //        } else {
+    //
+    //            ResponseTool::jsonReturn('-3','头像上传失败');
+    //
+    //        }
+    // }
 }
 
 UpHeardimage();
