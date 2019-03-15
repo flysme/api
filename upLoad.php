@@ -102,6 +102,8 @@ class ImgUpload1
     public function imgs_file()
     {
         $arr = static::$imgs_file;
+        var_dump($arr);
+        exit();
         foreach ($arr as $k => $v) {
 
 
