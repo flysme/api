@@ -27,14 +27,14 @@ include_once './utils/oauth.php';
   $utils = new Utils();
   $ischeck = true;
   $categorys = new Dlete_categorys();
-  $data = $utils->getParams();
-  if(empty($data['catesgory_id'])) {
+  parse_str($_SERVER['QUERY_STRING']);
+  if(empty($catesgory_id)) {
       $ischeck = array('data' => (object)array(),'msg'=>'分类id未知', 'status'=>400);
   }
 
   if (is_array($ischeck)) {
     echo json_encode($ischeck);
   } else {
-    $res = $categorys->deletecatesgorys($data['catesgory_id']);
+    $res = $categorys->deletecatesgorys($catesgory_id);
     echo json_encode($res);
   }
