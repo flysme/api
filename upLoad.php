@@ -8,7 +8,6 @@ header("Content-Type:text/html;charset=utf-8");
  * Time: 13:23
  */
 
- <?php
      $imgname = $_FILES['file']['name'];
      $tmp = $_FILES['file']['tmp_name'];
      $filepath = 'imgs/';
@@ -17,7 +16,6 @@ header("Content-Type:text/html;charset=utf-8");
      }else{
          echo "上传失败";
      }
- ?>
 
 // class ImgUpload1
 // {
