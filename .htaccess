@@ -6,7 +6,7 @@ RewriteRule ^apply_store$ apply_store.php
 RewriteRule ^create_product$ create_product.php
 RewriteRule ^deleteCatesgorys(.+)$ deleteCatesgorys.php?catesgory_id=$1
 RewriteRule ^edit_category/(.+)$ edit_category.php?catesgory_id=$1 [QSA,PT,L]
-RewriteRule ^(.+)/create_catesgorys/$ create_catesgorys.php?store_id=$1 [QSA,PT,L]
+RewriteRule ^(.+)/create_catesgorys$ create_catesgorys.php?store_id=$1 [QSA,PT,L]
 RewriteRule ^editProductDetail$ editProductDetail.php
 RewriteRule ^(.+)/getProductcategory$ getProductcategory.php?store_id=$1
 RewriteRule ^getProductDetail/(.+)$ getProductDetail.php?product_id=$1
