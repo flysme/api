@@ -116,4 +116,6 @@ class ImgUpload1
 }
 
 $img_upload = new ImgUpload1($_FILES);
+echo $_SERVER['DOCUMENT_ROOT'];
+exit();
 echo json_encode((object)array('data' => $img_upload->imgs_file()));
