@@ -79,9 +79,9 @@ class ImgUpload1
             echo '文件名不合法';
             return false;
         };
-
+        define('BASE_PATH',str_replace('\\','/',realpath(dirname(__FILE__).'/'))."/");
         //设置上传文件地址
-        $path = './imgs/';
+        $path = BASE_PATH.'imgs/';
         if (!is_dir($path)) {
             mkdir("$path");
         }
