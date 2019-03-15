@@ -41,8 +41,7 @@ class WXBizDataCrypt
 			return ErrorCode::$IllegalAesKey;
 		}
 		$aesKey=base64_decode($this->sessionKey);
-    echo $aesKey;
-    exit();
+
 
 		if (strlen($iv) != 24) {
 			return ErrorCode::$IllegalIv;
@@ -52,7 +51,8 @@ class WXBizDataCrypt
 		$aesCipher=base64_decode($encryptedData);
 
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-
+    var_dump($result);
+    exit();
     return $result;
 		$dataObj=json_decode( $result );
 		if( $dataObj  == NULL )
