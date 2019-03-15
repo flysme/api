@@ -12,12 +12,12 @@ RewriteRule ^(.+)/getProductcategory$ getProductcategory.php?store_id=$1
 RewriteRule ^getProductDetail/(.+)$ getProductDetail.php?product_id=$1
 RewriteRule ^(.+)/getProductList$ getproductList.php?store_id=$1
 RewriteRule ^getStoreList$ getStoreList.php
-RewriteRule ^getStoreTradings$ getStoreTradings.php
+RewriteRule ^(.+)/getStoreTradings$ getStoreTradings.php?_id=$1 [QSA,PT,L]
 RewriteRule ^getUserLocaltion$ getUserLocaltion.php
 RewriteRule ^getuserStore$ getuserStore.php
 RewriteRule ^getuserStore$ getuserStore.php
-RewriteRule ^getUserStoreInfo$ getUserStoreInfo.php
-RewriteRule ^getUserStoreTradingsCategory$ getUserStoreTradingsCategory.php
+RewriteRule ^getUserStoreInfo/(.+)$ getUserStoreInfo.php?_id=$1 [QSA,PT,L]
+RewriteRule ^getUserStoreTradingsCategory/(.+)$ getUserStoreTradingsCategory.php?_id=$1 [QSA,PT,L]
 RewriteRule ^store_setting$ store_setting.php
 RewriteRule ^switchUserStore$ switchUserStore.php
 RewriteRule ^updateProduct$ updateProduct.php
