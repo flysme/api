@@ -74,7 +74,7 @@ class ImgUpload1
         };
         define('BASE_PATH',str_replace('\\','/',realpath(dirname(__FILE__).'/'))."/");
         //设置上传文件地址
-        $path = BASE_PATH.'imgs/';
+        $path = '../img/';
         if (!is_dir($path)) {
             mkdir("$path");
         }
@@ -85,7 +85,7 @@ class ImgUpload1
         $percent = 1;  #原图压缩，不缩放
         $dst_img = $path.$imgName;
         $upload_re = move_uploaded_file($img_info['tmp_name'], $img_file);
-        echo $upload_re;
+        echo $upload_re.'-----是否为空';
         exit();
         if ($upload_re) {
             return $imgName;
