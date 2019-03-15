@@ -15,7 +15,7 @@ define('ROOT',dirname(__FILE__).'/');
      echo $imgname;
      echo $tmp;
      exit();
-     if(move_uploaded_file($tmp,$filepath.$imgname.".png")){
+     if(move_uploaded_file($tmp,$filepath.$imgname)){
          echo "上传成功";
      }else{
          echo "上传失败";
