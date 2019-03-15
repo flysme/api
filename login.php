@@ -55,7 +55,7 @@ include_once './service/session/session.php';
           Session::set('uid', $result['user_id'], 8000); //设置session
           $token = $this->buildToken($result['user_id'],$password);
           Session::set('token', $token, 8000); //设置session
-          headers('Authentication-Token:'.$token); //设置响应头
+          header('Authentication-Token:'.$token); //设置响应头
           $res =  (object)array('data' =>$resinfo,'msg'=>'登录成功', 'status'=>0);
         }
       }
