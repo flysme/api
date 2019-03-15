@@ -15,7 +15,7 @@ class Wxlogin {
   private $encryptedata;
   private $code = '';
   private $code2SessionUrl = '';
-  public function __construct($code,$iv,$encryptedata){
+  public function __construct($code,$iv,$encryptedata,$signature){
      include_once './config/db.php';
      include_once './utils/utils.php';
      $this -> DB = new DB();
@@ -55,7 +55,6 @@ $code = $_SERVER['HTTP_X_WX_CODE'];
 $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedata = $_SERVER['HTTP_X_WX_ENCRYPTE_DATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
-echo base64_decode($encryptedata);
 
 $Login = new Wxlogin($code,$iv,$encryptedata,$signature);
 
