@@ -41,9 +41,8 @@ include_once './utils/oauth.php';
   $ischeck = true;
   $categorys = new Create_categorys();
   /*新增分类*/
-  $cats_name=trim($_GET['cats_name']);
   $store_id=trim($_GET['store_id']);
-
+  parse_str($_SERVER['QUERY_STRING']);
   if(empty($cats_name)) {
       $ischeck = array('data' => (object)array(),'msg'=>'请填写分类名称', 'status'=>400);
   } else if(empty($store_id)) {
