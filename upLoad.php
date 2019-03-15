@@ -12,6 +12,7 @@ define('ROOT',dirname(__FILE__).'/');
      $imgname = $_FILES['file']['name'];
      $tmp = $_FILES['file']['tmp_name'];
      $filepath = ROOT.'/api/imgs/';
+     echo $filepath;
      if(move_uploaded_file($tmp,$filepath.$imgname.".png")){
          echo "上传成功";
      }else{
