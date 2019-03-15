@@ -81,7 +81,7 @@ class ImgUpload1
         };
 
         //设置上传文件地址
-        $path = 'imgs/';
+        $path = '.\imgs/';
         if (!is_dir($path)) {
             mkdir("$path");
         }
