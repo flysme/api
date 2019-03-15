@@ -13,8 +13,12 @@ define('ROOT',dirname(__FILE__).'/');
      $tmp = $_FILES['file']['tmp_name'];
      $filepath = './imgs/';
      echo $imgname;
+     $imgType = strrchr($imgname, '.');//文件名后缀
+     $imgName = MD5(uniqid(rand(), true)) . $imgType;
+     $img_file = $filepath.$imgName;
+     echo $img_file;
      exit();
-     if(move_uploaded_file($tmp,$filepath.$imgname)){
+     if(move_uploaded_file($tmp,$img_file)){
          echo "上传成功";
      }else{
          echo "上传失败";
