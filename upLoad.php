@@ -81,7 +81,7 @@ class ImgUpload1
         };
 
         //设置上传文件地址
-        $path = '.\imgs/';
+        $path = $_SERVER['DOCUMENT_ROOT'].'/imgs/';
         if (!is_dir($path)) {
             mkdir("$path");
         }
@@ -116,6 +116,4 @@ class ImgUpload1
 }
 
 $img_upload = new ImgUpload1($_FILES);
-echo $_SERVER['DOCUMENT_ROOT'];
-exit();
 echo json_encode((object)array('data' => $img_upload->imgs_file()));
