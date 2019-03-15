@@ -70,6 +70,8 @@ include_once './utils/oauth.php';
   $data = $utils->getParams();
   /*更新分类*/
   var_dump($_SERVER['QUERY_STRING']);
+  parse_str($_SERVER['QUERY_STRING']);
+  echo $catesgory_id;
   exit();
   if($utils->isPut()) {
     if(empty($data['catesgory_id'])) {
