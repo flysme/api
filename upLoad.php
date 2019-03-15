@@ -12,8 +12,6 @@ define('ROOT',dirname(__FILE__).'/');
      $imgname = $_FILES['file']['name'];
      $tmp = $_FILES['file']['tmp_name'];
      $filepath = ROOT.'imgs/';
-     echo $filepath;
-     exit();
      if(move_uploaded_file($tmp,$filepath.$imgname)){
          echo "上传成功";
      }else{
