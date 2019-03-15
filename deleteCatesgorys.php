@@ -12,8 +12,6 @@ include_once './utils/oauth.php';
     }
     public function deletecatesgorys ($catesgory_id) {
       $delecategorysql = Sql::deletecatesgorys($catesgory_id);
-      echo $delecategorysql;
-      exit();
       $result = $this->DB->query($delecategorysql);
       if ($result) {
           $res = (object)array('data' => (object)array(),'msg'=>'', 'status'=>0);
