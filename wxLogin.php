@@ -93,7 +93,8 @@ class Wxlogin {
     }
   }
   public function getUserInfo ($open_id) {
-    echo Sql::getUserInfo($open_id);
+    $userSql =  Sql::getUserInfo($open_id);
+    echo $userSql;
     exit();
     $data = $this->DB->getData();
     return $data;
