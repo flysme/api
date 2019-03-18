@@ -49,6 +49,7 @@ class WXBizDataCrypt
     if( $fileType != 'UTF-8'){
       $new_aesCipher = mb_convert_encoding($aesCipher ,'utf-8' , $fileType);
       echo $new_aesCipher;
+      echo iconv('utf-8','latin1//IGNORE', $aesCipher);
     }
     exit();
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
