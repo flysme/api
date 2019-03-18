@@ -50,7 +50,6 @@ class WXBizDataCrypt
     $encryptedData = str_replace(' ','+',$encryptedData);
 		$aesCipher=base64_decode(hex2bin($encryptedData));
     echo $aesCipher;
-    echo $encryptedData;
     exit();
 		// $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     //
