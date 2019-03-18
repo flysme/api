@@ -78,7 +78,7 @@ class Wxlogin {
   public function addUser ($open_id,$username,$avatar) {
     $queryData = array(
       'user_id' => $open_id,
-      'username' => $username,
+      'username' => base64_encode($username),
       'avatar' => $avatar,
       'open_id' => $open_id,
       'create_time' => time(),
