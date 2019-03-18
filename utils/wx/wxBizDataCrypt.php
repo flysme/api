@@ -12,7 +12,7 @@ include_once "errorCode.php";
 
 class WXBizDataCrypt
 {
-    private $appid;
+  private $appid;
 	private $sessionKey;
 
 	/**
@@ -37,6 +37,8 @@ class WXBizDataCrypt
 	 */
 	public function decryptData( $encryptedData, $iv, &$data )
 	{
+    echo $encryptedData;
+    exit();
 		if (strlen($this->sessionKey) != 24) {
 			return ErrorCode::$IllegalAesKey;
 		}
@@ -51,11 +53,6 @@ class WXBizDataCrypt
 		$aesCipher=base64_decode($encryptedData);
 
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-    // var_dump($result);
-    echo $encryptedData;
-    echo $iv;
-    exit();
-    return $result;
 		$dataObj=json_decode( $result );
 		if( $dataObj  == NULL )
 		{
