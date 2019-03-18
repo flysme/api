@@ -43,7 +43,7 @@ class Wxlogin {
   public function Login ($session_key) {
     include_once "./utils/wx/wxBizDataCrypt.php";
     $Wx = new WXBizDataCrypt($this->appId, $session_key);
-    $errCode = $Wx->decryptData($this-> encryptedata, $this-> iv, $data );
+    $errCode = $Wx->decryptData($this->encryptedata, $this->iv, $data );
     // if ($errCode == 0) {
         // print($data . "\n");
         echo $errCode;
@@ -55,7 +55,8 @@ $code = $_SERVER['HTTP_X_WX_CODE'];
 $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedata = $_SERVER['HTTP_X_WX_ENCRYPTE_DATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
-
+echo $encryptedata;
+exit();
 $Login = new Wxlogin($code,$iv,$encryptedata,$signature);
 
 $_result = $Login->getSessionKey();
