@@ -30,6 +30,8 @@ class WXBizDataCrypt
       $base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
       $ret="";
       $in_len = strlen($encode_str);
+      echo $in_len;
+      exit();
       $i = 0;
       $j = 0;
       $in_ = 0;
@@ -134,10 +136,9 @@ class WXBizDataCrypt
 		$aesIV=base64_decode($iv);
     $encryptedData = str_replace(' ','+',$encryptedData);
 		// $aesCipher=base64_decode($encryptedData);
-    echo $this->base_decode($encryptedData);
+    $aesCipher = $this->base_decode($encryptedData);
     exit();
-		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-    var_dump($result);
+		// $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     //
 		// $dataObj=json_decode( $result );
 		// if( $dataObj  == NULL )
@@ -153,5 +154,4 @@ class WXBizDataCrypt
     // // var_dump($result);
 		// return $result;
 	}
-
 }
