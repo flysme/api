@@ -1,5 +1,5 @@
 <?php
-
+header("Content-type:application/json;charset=utf-8"); //设置请求头
 /**
  * 对微信小程序用户加密数据的解密示例代码.
  *
