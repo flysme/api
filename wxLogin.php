@@ -54,7 +54,7 @@ class Wxlogin {
         if(!isset($info) || empty($info)){
           $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
           if (!empty($isAdd)) {
-            $currentInfo=$this->getUserInfo($open_id);                  //获取用户信息
+            $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
             if (!empty($currentInfo)) {
               $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
               Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
@@ -92,7 +92,7 @@ class Wxlogin {
   public function getUserInfo ($open_id) {
     $userSql =  Sql::getUserInfo($open_id);
     $data = $this->DB->getData($userSql);
-    return $data;
+    return empty($data) ? null :$data;
   }
   // 微信登录
   // public function weixin_login(){
