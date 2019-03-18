@@ -47,7 +47,7 @@ class WXBizDataCrypt
 		$aesCipher=base64_decode($encryptedData);
     $fileType = mb_detect_encoding($aesCipher , array('UTF-8','GBK','LATIN1','BIG5')) ;
     if( $fileType != 'UTF-8'){
-      $new_aesCipher = mb_convert_encoding($aesCipher,"UTF-8","GB2312");
+      $new_aesCipher = mb_convert_encoding($aesCipher,"UTF-8","auto");
       echo $new_aesCipher;
     }
     exit();
