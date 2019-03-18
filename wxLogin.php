@@ -34,7 +34,7 @@ class Wxlogin {
     include_once "./utils/wx/wxBizDataCrypt.php";
     $Wx = new WXBizDataCrypt($this->appId, $session_key);
     $errCode = $Wx->decryptData($this->Utils->define_str_replace($this->encryptedata), $this->Utils->define_str_replace($this->iv), $data );
-    return array('errcode'=>$errCode,'data'=>json_encode($data),'errmsg'=> $this -> Utils->define_str_replace($session_key));
+    return array('errcode'=>$errCode,'data'=>json_decode($data),'errmsg'=> $this -> Utils->define_str_replace($session_key));
   }
   public function Login () {
     $userSessionData = $this->getSessionKey();
@@ -47,9 +47,6 @@ class Wxlogin {
       $msg = $this->Users($session_key); //获取微信用户信息（openid）
       if ($msg['errcode'] == 0) {
         $msgData = $msg['data'];
-        // echo ;
-        var_dump($msgData);
-        exit();
         $open_id=$msgData['openId']; //open_id;
         $username=$msgData['nickName']; //nickName;
         $avatar=$msgData['avatarUrl']; //avatarUrl;
