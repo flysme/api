@@ -54,8 +54,8 @@ class Wxlogin {
         if(!isset($info) || empty($info)){
           $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
           if (!empty($isAdd)) {
-            $info=$this->getUserInfo($open_id);                  //获取用户信息
-            if (!empty($info)) {
+            $currentInfo=$this->getUserInfo($open_id);                  //获取用户信息
+            if (!empty($currentInfo)) {
               $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
               Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
               return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
