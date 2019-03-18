@@ -46,8 +46,9 @@ class Wxlogin {
     } else {
       $msg = $this->Users($session_key); //获取微信用户信息（openid）
       if ($msg['errcode'] == 0) {
-        $msgData = json_decode($msg['data']);
-        echo $msgData['openId'];
+        $msgData = $msg['data'];
+        // echo ;
+        var_dump($msgData);
         exit();
         $open_id=$msgData['openId']; //open_id;
         $username=$msgData['nickName']; //nickName;
