@@ -134,7 +134,7 @@
     }
     /*查询商品详情*/
     public static function getProductsDetail($product_id){
-      $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+      $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_cost_price as cost_price,product_specs.product_num,product_specs.product_price,product_specs.product_specs FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
       $sql = "{$basesql} where product.product_id='{$product_id}'";
       return $sql;
     }
