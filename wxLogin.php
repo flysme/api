@@ -30,7 +30,7 @@ class Wxlogin {
     $codeInfo = $this ->Utils->objectToarray(json_decode($result));
     return array('errcode'=>$codeInfo['errcode'],'data'=>$codeInfo,'errmsg'=>$codeInfo['errmsg']);
   }
-  public function Users ($session_key) {
+  public function UsersEncrypt ($session_key) {
     include_once "./utils/wx/wxBizDataCrypt.php";
     $Wx = new WXBizDataCrypt($this->appId, $session_key);
     $errCode = $Wx->decryptData($this->Utils->define_str_replace($this->encryptedata), $this->Utils->define_str_replace($this->iv), $data );
@@ -44,28 +44,25 @@ class Wxlogin {
     if (!empty($session)) {
       return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
     } else {
-      $msg = $this->Users($session_key); //获取微信用户信息（openid）
+      $msg = $this->UsersEncrypt($session_key); //获取微信用户信息（openid）
       if ($msg['errcode'] == 0) {
         $msgData = $this ->Utils->objectToarray($msg['data']);
         $open_id = $msgData['openId']; //open_id;
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
         $info= $this->getUserInfo($open_id);
-        if(!$info || empty($info)){
-          $user = $this->Users();
-          var_dump($user);
-          exit();
-          // $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
-          // if (!empty($isAdd)) {
-          //   $info=$this->getUserInfo($open_id);                  //获取用户信息
-          //   if (!empty($info)) {
-          //     $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
-          //     Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
-          //     return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
-          //   }
-          // } else {
-          //   return array('error_code' => 401,'msg' => '用户登录失败');
-          // }
+        if(!isset($info) || empty($info)){
+          $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
+          if (!empty($isAdd)) {
+            $info=$this->getUserInfo($open_id);                  //获取用户信息
+            if (!empty($info)) {
+              $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
+              Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
+              return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
+            }
+          } else {
+            return array('error_code' => 401,'msg' => '用户登录失败');
+          }
         }
         if($session_id){
           $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
