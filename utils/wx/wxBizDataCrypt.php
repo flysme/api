@@ -47,7 +47,7 @@ class WXBizDataCrypt
 		$aesIV=base64_decode($iv);
     // $encryptedData = str_replace(' ','+',$encryptedData);
 		$aesCipher=base64_decode($encryptedData);
-    echo $aesCipher;
+    echo 11111111111;
     exit();
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     //
