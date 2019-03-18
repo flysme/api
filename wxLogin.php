@@ -86,12 +86,14 @@ class Wxlogin {
     );
     $addUsersql = Sql::addUser($queryData);
     $data= $this->DB->query($addUsersql);
+    echo $data;
+    exit();
     if (!empty($data))return $data;
     return null;
   }
   public function getUserInfo ($open_id) {
     $userSql =  Sql::getUserInfo($open_id);
-    $data = $this->DB->getData($userSql);
+    $data = $this -> DB ->getData($userSql);
     return empty($data) ? null :$data;
   }
   // 微信登录
