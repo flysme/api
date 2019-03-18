@@ -53,11 +53,8 @@ class Wxlogin {
 }
 $code = $_SERVER['HTTP_X_WX_CODE'];
 $iv = $_SERVER['HTTP_X_WX_IV'];
-$encryptedata = $_SERVER['HTTP_X_WX_ENCRYPTE_DATA'];
+$encryptedata = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
-// echo $encryptedata;
-var_dump($_SERVER);
-exit();
 $Login = new Wxlogin($code,$iv,$encryptedata,$signature);
 
 $_result = $Login->getSessionKey();
