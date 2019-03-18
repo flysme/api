@@ -42,22 +42,18 @@ class WXBizDataCrypt
 		if (strlen($iv) != 24) {
 			return ErrorCode::$IllegalIv;
 		}
-		$aesIV=base64_decode($this->define_str_replace($iv));
-		$aesCipher=base64_decode($this->define_str_replace($encryptedData));
+		$aesIV=base64_decode($iv);
+		$aesCipher=base64_decode($encryptedData);
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
 		$dataObj=json_decode( $result );
-		if( $dataObj  == NULL )
-		{
+		if( $dataObj  == NULL ) {
 			return ErrorCode::$IllegalBuffer;
 		}
-		if( $dataObj->watermark->appid != $this->appid )
-		{
+		if( $dataObj->watermark->appid != $this->appid ) {
 			return ErrorCode::$IllegalBuffer;
 		}
 		$data = $result;
 		return ErrorCode::$OK;
 	}
-  public function define_str_replace($data){
-    return str_replace(' ','+',$data);
-  }
+
 }

@@ -89,10 +89,10 @@
     /*新增sku*/
     public static function createSkuProducts($data){
       $utils = new Utils();
-      $insert = "insert into product_specs (`sku_id`,`product_id`,`product_num`,`product_price`,`product_cost_price`,`product_specs`,`product_img`, `upts_time`, `create_time`) values ";
+      $insert = "insert into product_specs (`sku_id`,`product_id`,`product_num`,`product_price`,`product_specs`,`product_img`, `upts_time`, `create_time`) values ";
       foreach($data as $value){
         $sku_id = $utils->generateUid();
-        $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_cost_price'].'","'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
+        $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
       };
       $insert = chop($insert,',');
       return $insert;
@@ -134,7 +134,7 @@
     }
     /*查询商品详情*/
     public static function getProductsDetail($product_id){
-      $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs,product_specs.product_cost_price as cost_price FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
+      $basesql = "select product.*,product_specs.product_id as sku_product_id,product_specs.product_img as product_sku_img, product_specs.sku_id,product_specs.product_num,product_specs.product_price,product_specs.product_specs FROM product RIGHT OUTER JOIN product_specs ON product.product_id = product_specs.product_id";
       $sql = "{$basesql} where product.product_id='{$product_id}'";
       return $sql;
     }
@@ -157,7 +157,7 @@
     }
     /*新增店铺设置*/
     public static function storeSetting($data){
-      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`business_start_times`,`business_end_times`,`business_status`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}',{$data["delivery_price"]},{$data["start_delivery_price"]},'{$data["business_start_times"]}','{$data["business_end_times"]}',{$data["business_status"]},'{$data["create_time"]}')";
+      return "replace into store_setting (`setting_id`,`store_id`, `delivery_price`, `start_delivery_price`,`business_start_times`,`business_end_times`,`business_status`,`create_time`)values('{$data["setting_id"]}','{$data["store_id"]}','{$data["delivery_price"]}','{$data["start_delivery_price"]}','{$data["business_start_times"]}','{$data["business_end_times"]}',{$data["business_status"]},'{$data["create_time"]}')";
     }
     /*获取店铺设置信息*/
     public static function getStoreSetting($store_id){
@@ -180,7 +180,15 @@
     }
     /*获取店铺信息*/
     public static function getStoreInfo($store_id) {
-        $basesql = "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.business_status FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
+        $basesql = "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.discounts,store_setting.business_status FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
       return $basesql;
+    }
+    /*用户登录*/
+    public static function addUser($data){
+      return "replace into user (`user_id`,`username`, `avatar`, `open_id`,`create_time`,`status`)values('{$data["user_id"]}','{$data["username"]}','{$data["avatar"]}','{$data["open_id"]}','{$data["create_time"]}','{$data["status"]}')";
+    }
+    /*获取用户信息*/
+    public static function getUserInfo($open_id){
+      return "select user.user_id as _id,user.username,user.avatar,user.status,user.create_time FROM user where open_id in('{$open_id}')";
     }
   }

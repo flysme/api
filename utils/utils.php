@@ -197,5 +197,8 @@
         }
         return $array;
       }
+      public function define_str_replace($data){
+        return str_replace(' ','+',$data);
+      }
 
   }
