@@ -45,38 +45,50 @@ class Wxlogin {
       return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
     } else {
       $msg = $this->UsersEncrypt($session_key); //获取微信用户信息（openid）
-      if ($msg['errcode'] == 0) {
+      if ($msg['errcode'] == 0)
+      {
         $msgData = $this ->Utils->objectToarray($msg['data']);
         $open_id = $msgData['openId']; //open_id;
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
-        $info= $this->getUserInfo($open_id);
-        if(!isset($info) || empty($info)){
+        $info = $this->getUserInfo($open_id);
+        var_dump($info);
+        exit();
+        if(!$info || empty($info))
+        {
           $query_res = $this->addUser($open_id,$username,$avatar); //用户信息入库
-          if (!empty($query_res)) {
+          if (!empty($query_res))
+          {
             $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
-            if (!empty($currentInfo)) {
+            if (!empty($currentInfo))
+            {
               $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
               Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
               return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
             }
-          } else {
+          }
+          else
+          {
             return array('error_code' => 401,'msg' => '用户登录失败');
           }
         }
         if($session_id){
           $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
-        }else{
+        }
+        else
+        {
           $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_db->getSid($info['id'])]);
         }
-      } else {
+      }
+      else
+      {
         return array('error_code' => $msg['errcode'],'msg' => $msg['errmsg']);
       }
     }
   }
   // 添加用户入库
   public function addUser ($open_id,$username,$avatar) {
-    $this-> DB->connect();//连接数据库
+    $this->DB->connect();//连接数据库
     $queryData = array(
       'user_id' => $open_id,
       'username' => base64_encode($username),
@@ -86,68 +98,18 @@ class Wxlogin {
       'status' => 1,
     );
     $addUsersql = Sql::addUser($queryData);
-    $data= $this-> DB ->query($addUsersql);
-    $this-> DB->links->close();
+    $data= $this->DB->query($addUsersql);
+    $this->DB->links->close();
     if (!empty($data))return $data;
     return null;
   }
   public function getUserInfo ($open_id) {
-    $this-> DB->connect();//连接数据库
+    $this->DB->connect();//连接数据库
     $userSql =  Sql::getUserInfo($open_id);
     $data = $this -> DB ->getData($userSql);
     $this-> DB->links->close();
     return empty($data) ? null :$data;
   }
-  // 微信登录
-  // public function weixin_login(){
-  //
-  //   $session_db=D('Session');
-  //
-  //   $session_id=I('get.sessionid','');
-  //
-  //   $session=$session_db->getSession($session_id);
-  //
-  //   if( !empty( $session ) ){
-  //
-  //     $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);
-  //
-  //   }else{
-  //
-  //     $iv=define_str_replace(I('get.iv')); //把空格转成+
-  //
-  //     $encryptedData=urldecode(I('get.encryptedData'));  //解码
-  //
-  //     $code=define_str_replace(I('get.code')); //把空格转成+
-  //     $msg=D('Weixin')->getUserInfo($code,$encryptedData,$iv); //获取微信用户信息（openid）
-  //     if($msg['errCode']==0){
-  //       $open_id=$msg['data']->openId;
-  //
-  //       $users_db=D('Users');
-  //
-  //       $info=$users_db->getUserInfo($open_id);
-  //
-  //       if($info||empty($info)){
-  //
-  //         $users_db->addUser(['open_id'=>$open_id,'last_time'=>['exp','now()']]); //用户信息入库
-  //
-  //         $info=$users_db->getUserInfo($open_id);                  //获取用户信息
-  //
-  //         $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
-  //
-  //         $session_db->addSession(['uid'=>$info['id'],'id'=>$session_id]); //保存session
-  //
-  //       }
-  //       if($session_id){
-  //         $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
-  //       }else{
-  //         $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_db->getSid($info['id'])]);
-  //       }
-  //     }else{
-  //       $this->ajaxReturn(['error_code'=>'用户信息获取失败！']);
-  //     }
-  //
-  //   }
-  // }
 }
 
 $code = $_SERVER['HTTP_X_WX_CODE'];
@@ -156,4 +118,4 @@ $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
 $Login = new Wxlogin($code,$iv,$encryptedData,$signature);
 $result = $Login->Login();
-// echo json_encode($result);
+echo json_encode($result);
