@@ -45,7 +45,7 @@ class WXBizDataCrypt
 			return ErrorCode::$IllegalIv;
 		}
 		$aesIV=base64_decode($iv);
-		$aesCipher=base64_decode(iconv("UTF-8","GBK",$encryptedData));
+		$aesCipher=base64_decode(mb_convert_encoding($encryptedData,"UTF-8","GBK"));
     echo $aesCipher;
     exit();
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
