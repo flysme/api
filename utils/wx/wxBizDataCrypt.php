@@ -1,5 +1,4 @@
 <?php
-header("Content-type:application/json;charset=utf-8"); //设置请求头
 /**
  * 对微信小程序用户加密数据的解密示例代码.
  *
@@ -8,7 +7,7 @@ header("Content-type:application/json;charset=utf-8"); //设置请求头
 
 
 include_once "errorCode.php";
-
+header("Content-type:application/json;charset=utf-8"); //设置请求头
 
 class WXBizDataCrypt
 {
@@ -45,24 +44,20 @@ class WXBizDataCrypt
 			return ErrorCode::$IllegalIv;
 		}
 		$aesIV=base64_decode($iv);
-    mb_internal_encoding("UTF-8");
-		$aesCipher=base64_decode(iconv('utf-8','gbk//IGNORE',$encryptedData));
-    echo $aesCipher;
-    exit();
+		$aesCipher=base64_decode($encryptedData);
+    $new_aesCipher = iconv( "gbk","utf-8", $aesCipher);
+    echo $new_aesCipher;
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-    //
-		// $dataObj=json_decode( $result );
-		// if( $dataObj  == NULL )
-		// {
-		// 	return ErrorCode::$IllegalBuffer;
-		// }
-		// if( $dataObj->watermark->appid != $this->appid )
-		// {
-		// 	return ErrorCode::$IllegalBuffer;
-		// }
-		// $data = $result;
-		// // return ErrorCode::$OK;
-    // // var_dump($result);
-		// return $result;
+		$dataObj=json_decode( $result );
+		if( $dataObj  == NULL )
+		{
+			return ErrorCode::$IllegalBuffer;
+		}
+		if( $dataObj->watermark->appid != $this->appid )
+		{
+			return ErrorCode::$IllegalBuffer;
+		}
+		$data = $result;
+		return ErrorCode::$OK;
 	}
 }
