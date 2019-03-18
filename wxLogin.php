@@ -60,7 +60,7 @@ class Wxlogin {
             $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
             if (!empty($currentInfo))
             {
-              $session_id= $this->_3rd_session(16);  //生成3rd_session
+              $session_id= system(`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`);  //生成3rd_session
               Session::set($session_id, array('open_id'=>$openid,'session_key'=>$session_key), 8800); //设置session
               return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
             }
