@@ -40,7 +40,7 @@ class Wxlogin {
     $userSessionData = $this->getSessionKey();
     $session_key = $userSessionData['data']['session_key'];
     $session_id = $_SERVER['HTTP_SESSION_ID'];
-    $session = Session::get($session_id);
+    $session = !empty($session_id) ? Session::get($session_id) :null;
     if (!empty($session)) {
       return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
     } else {
