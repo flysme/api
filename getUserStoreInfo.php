@@ -16,6 +16,8 @@ include_once './utils/utils.php';
     public function getstoreInfo () {
       $this->DB->connect();//连接数据库
       $getStoreInfosql = Sql::getStoreInfo($this->store_id);
+      echo $getStoreInfosql;
+      exit();
       $resultstore = $this->DB->getData($getStoreInfosql);
       if (!empty($resultstore)) {  // 存在店铺信息
           $resstore = array(
