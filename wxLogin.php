@@ -5,7 +5,6 @@ include_once './config/sql.php';
 include_once './utils/oauth.php';
 include_once './service/session/session.php';
 
-header('Content-Type:text/plain;charset=utf-8');
 
 class Wxlogin {
   private $appId = 'wx6e219488e53a4991';
@@ -46,8 +45,6 @@ class Wxlogin {
     $errCode = $Wx->decryptData($this->encryptedata, $this->iv, $data );
     // if ($errCode == 0) {
         // print($data . "\n");
-        echo $errCode;
-        var_dump();
     // }
   }
 }
@@ -55,10 +52,6 @@ $code = $_SERVER['HTTP_X_WX_CODE'];
 $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
-// $Login = new Wxlogin($code,$iv,$encryptedData,$signature);
-// var_dump($_SERVER);
-$key = base64_decode(str_replace(" ","+",$encryptedData));
-echo 11111111121212122;
-exit();
-// $_result = $Login->getSessionKey();
+$Login = new Wxlogin($code,$iv,$encryptedData,$signature);
+$_result = $Login->getSessionKey();
 // echo json_encode($_result);
