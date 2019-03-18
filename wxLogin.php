@@ -8,7 +8,7 @@ include_once './service/session/session.php';
 
 class Wxlogin {
   private $appId = 'wx6e219488e53a4991';
-  private $DB;
+  public $DB;
   private $Utils;
   private $appSecret = '6c6c994f9621881075cb910b14ff2848';
   private $encryptedata;
@@ -85,7 +85,7 @@ class Wxlogin {
       'status' => 1,
     );
     $addUsersql = Sql::addUser($queryData);
-    $data= $this->DB->query($addUsersql);
+    $data= $this-> DB ->query($addUsersql);
     echo $data;
     exit();
     if (!empty($data))return $data;
