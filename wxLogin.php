@@ -5,8 +5,7 @@ include_once './config/sql.php';
 include_once './utils/oauth.php';
 include_once './service/session/session.php';
 
-header("Content-type:application/json;charset=utf-8"); //设置请求头
-
+header('Content-Type:text/plain;charset=utf-8');
 
 class Wxlogin {
   private $appId = 'wx6e219488e53a4991';
