@@ -188,6 +188,6 @@
     }
     /*获取用户信息*/
     public static function getUserInfo($open_id){
-      return "select user.user_id as _id,user.username,user.avatar,user.status,user.create_time FROM user where open_id in('{$open_id}')";
+      return "select user.user_id as _id,user.username,user.avatar,user.status,user.create_time FROM user where open_id='{$open_id}'";
     }
   }

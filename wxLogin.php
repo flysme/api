@@ -51,10 +51,10 @@ class Wxlogin {
         $username=$msgData['nickName']; //nickName;
         $avatar=$msgData['avatarUrl']; //avatarUrl;
         $info=$this->getUserInfo($open_id);
-        var_dump($info);
-        exit();
         if(!$info || empty($info)){
           $user = $this->Users();
+          var_dump($user);
+          exit();
           $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
           if (!empty($isAdd)) {
             $info=$this->getUserInfo($open_id);                  //获取用户信息
