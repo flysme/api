@@ -15,6 +15,11 @@ class Wxlogin {
   private $code = '';
   private $code2SessionUrl = '';
   public function __construct($code,$iv,$encryptedata,$signature){
+     $redis = new Redis();
+     $redis->connect('127.0.0.1', 6379);
+     echo "Connection to server sucessfully";
+           //查看服务是否运行
+     echo "Server is running: " . $redis->ping();
      include_once './config/db.php';
      include_once './utils/utils.php';
      $this -> DB = new DB();
@@ -109,6 +114,7 @@ class Wxlogin {
     $this-> DB->links->close();
     return empty($data) ? null :$data;
   }
+  /*生成 _3rd_session*/
   public function _3rd_session($len) {
       $fp = @fopen('/dev/urandom', 'rb');
       $result = '';
