@@ -52,8 +52,8 @@ class Wxlogin {
         $avatar= $msgData['avatarUrl']; //avatarUrl;
         // $info= $this->getUserInfo($open_id);
         // if(!isset($info) || empty($info)){
-          $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
-          if (!empty($isAdd)) {
+          $query_res = $this->addUser($open_id,$username,$avatar); //用户信息入库
+          if (!empty($query_res)) {
             $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
             if (!empty($currentInfo)) {
               $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
@@ -85,12 +85,9 @@ class Wxlogin {
       'status' => 1,
     );
     $addUsersql = Sql::addUser($queryData);
-    echo $addUsersql;
-    exit();
-    $data=$this->DB->query($addUsersql);
-    if (!empty($data)) {
-      return $data;
-    }
+    $data= $this->DB->query($addUsersql);
+    if (!empty($data))return $data;
+    return null;
   }
   public function getUserInfo ($open_id) {
     $userSql =  Sql::getUserInfo($open_id);
