@@ -50,8 +50,7 @@ class Wxlogin {
         $open_id = $msgData['openId']; //open_id;
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
-        exit();
-        $info=$this->getUserInfo($open_id);
+        $info= $this->getUserInfo($open_id);
         if(!$info || empty($info)){
           $user = $this->Users();
           var_dump($user);
@@ -94,7 +93,9 @@ class Wxlogin {
     }
   }
   public function getUserInfo ($open_id) {
-    $data = $this->DB->getData(Sql::getUserInfo($open_id));
+    echo Sql::getUserInfo($open_id);
+    exit();
+    $data = $this->DB->getData();
     return $data;
   }
   // 微信登录
