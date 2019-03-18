@@ -81,6 +81,7 @@ class WXBizDataCrypt
       }
       // $ret1= $this->decode($ret);
       // return $ret1;
+      return $ret;
   }
   // public function decode($text)
   // {
