@@ -49,11 +49,10 @@ class WXBizDataCrypt
 		$aesIV=base64_decode($iv);
 
 		$aesCipher=base64_decode($encryptedData);
-
-		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-    echo $aesCipher;
-    // var_dump($result);
+    echo $aesCipher.'--$aesCipher--'.$aesKey.'--$aesKey---'.$aesIV.'--$aesIV--';
     exit();
+		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+
 		$dataObj=json_decode( $result );
 		if( $dataObj  == NULL )
 		{
@@ -65,6 +64,9 @@ class WXBizDataCrypt
 		}
 		$data = $result;
 		// return ErrorCode::$OK;
+    echo $aesCipher;
+    // var_dump($result);
+    exit();
 		return $result;
 	}
 
