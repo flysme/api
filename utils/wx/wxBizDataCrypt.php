@@ -40,20 +40,19 @@ class WXBizDataCrypt
 		if (strlen($this->sessionKey) != 24) {
 			return ErrorCode::$IllegalAesKey;
 		}
-    $this->sessionKey = str_replace(' ','+',$this->sessionKey);
 		$aesKey=base64_decode($this->sessionKey);
 
 
 		if (strlen($iv) != 24) {
 			return ErrorCode::$IllegalIv;
 		}
-    $iv = str_replace(' ','+',$iv);
 		$aesIV=base64_decode($iv);
     $reencryptedData = str_replace(' ','+',$encryptedData);
 		$aesCipher=base64_decode($reencryptedData);
-    print_r($aesCipher);
+    echo $aesCipher;
+    echo $reencryptedData;
     exit();
-		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
+		// $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     //
 		// $dataObj=json_decode( $result );
 		// if( $dataObj  == NULL )
