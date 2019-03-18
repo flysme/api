@@ -130,7 +130,7 @@ class WXBizDataCrypt
 			return ErrorCode::$IllegalIv;
 		}
 		$aesIV=base64_decode($iv);
-    $encryptedData = str_replace(' ','+',$encryptedData);
+    // $encryptedData = str_replace(' ','+',$encryptedData);
 		// $aesCipher=base64_decode($encryptedData);
     $aesCipher = $this->base_decode($encryptedData);
     echo $aesCipher;
