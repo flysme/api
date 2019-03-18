@@ -41,38 +41,38 @@ class Wxlogin {
     $session_key = $userSessionData['data']['session_key'];
     $session_id = $_SERVER['HTTP_SESSION_ID'];
     $session = !empty($session_id) ? Session::get($session_id) :null;
-    if (!empty($session)) {
-      return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
-    } else {
-      $msg = $this->Users($session_key); //获取微信用户信息（openid）
-      if ($msg['errcode'] == 0) {
-        $open_id=$msg['data']->openId; //open_id;
-        $username=$msg['data']->nickName; //nickName;
-        $avatar=$msg['data']->openavatarUrlId; //open_id;
-        $info=$this->getUserInfo($open_id);
-        if(!$info || empty($info)){
-          $user = $this->Users();
-          $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
-          if (!empty($isAdd)) {
-            $info=$this->getUserInfo($open_id);                  //获取用户信息
-            if (!empty($info)) {
-              $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
-              Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
-              return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
-            }
-          } else {
-            return array('error_code' => 401,'msg' => '用户登录失败');
-          }
-        }
-        if($session_id){
-          $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
-        }else{
-          $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_db->getSid($info['id'])]);
-        }
-      } else {
-        return array('error_code' => $msg['errcode'],'msg' => $msg['errmsg']);
-      }
-    }
+    // if (!empty($session)) {
+    //   return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
+    // } else {
+    //   $msg = $this->Users($session_key); //获取微信用户信息（openid）
+    //   if ($msg['errcode'] == 0) {
+    //     $open_id=$msg['data']->openId; //open_id;
+    //     $username=$msg['data']->nickName; //nickName;
+    //     $avatar=$msg['data']->openavatarUrlId; //open_id;
+    //     $info=$this->getUserInfo($open_id);
+    //     if(!$info || empty($info)){
+    //       $user = $this->Users();
+    //       $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
+    //       if (!empty($isAdd)) {
+    //         $info=$this->getUserInfo($open_id);                  //获取用户信息
+    //         if (!empty($info)) {
+    //           $session_id=`head -n 80 /dev/urandom | tr -dc A-Za-z0-9 | head -c 168`;  //生成3rd_session
+    //           Session::set($session_id, array('open_id'=>$openid,'session_key'=>$_sessionKey), 8800); //设置session
+    //           return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
+    //         }
+    //       } else {
+    //         return array('error_code' => 401,'msg' => '用户登录失败');
+    //       }
+    //     }
+    //     if($session_id){
+    //       $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
+    //     }else{
+    //       $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_db->getSid($info['id'])]);
+    //     }
+    //   } else {
+    //     return array('error_code' => $msg['errcode'],'msg' => $msg['errmsg']);
+    //   }
+    // }
   }
   // 添加用户入库
   public function addUser ($open_id,$username,$avatar) {
