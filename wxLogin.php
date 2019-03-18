@@ -46,10 +46,11 @@ class Wxlogin {
     } else {
       $msg = $this->Users($session_key); //获取微信用户信息（openid）
       if ($msg['errcode'] == 0) {
-        $msgData = $msg['data'];
-        $open_id=$msgData->openId; //open_id;
-        $username=$msgData->nickName; //nickName;
-        $avatar=$msgData->avatarUrl; //avatarUrl;
+        var_dump($msg);
+        exit();
+        $open_id=$msg['data']->openId; //open_id;
+        $username=$msg['data']->nickName; //nickName;
+        $avatar=$msg['data']->avatarUrl; //avatarUrl;
         $info=$this->getUserInfo($open_id);
         if(!$info || empty($info)){
           $user = $this->Users();
