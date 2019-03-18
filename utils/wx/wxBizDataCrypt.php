@@ -44,12 +44,14 @@ class WXBizDataCrypt
 		// }
 		$aesIV=base64_decode($iv);
 		$aesCipher=base64_decode($encryptedData);
+    $a5 = iconv("GBK","UTF-8",$aesCipher);
+    echo $a5;
+    exit();
     $fileType = mb_detect_encoding($aesCipher , array('UTF-8','GBK','LATIN1','BIG5')) ;
     if( $fileType != 'UTF-8'){
       $new_aesCipher = mb_convert_encoding($aesCipher,"UTF-8","auto");
       echo $new_aesCipher;
     }
-    exit();
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
 		$dataObj=json_decode( $result );
 		// if( $dataObj  == NULL )
