@@ -79,41 +79,41 @@ class WXBizDataCrypt
               $ret.=chr($char_array_3[$j]);
           }
       }
-      $ret1= $this->decode($ret);
-      return $ret1;
+      // $ret1= $this->decode($ret);
+      // return $ret1;
   }
-  public function decode($text)
-  {
-      define('UTF32_BIG_ENDIAN_BOM', chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF));
-      define('UTF32_LITTLE_ENDIAN_BOM', chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00));
-      define('UTF16_BIG_ENDIAN_BOM', chr(0xFE) . chr(0xFF));
-      define('UTF16_LITTLE_ENDIAN_BOM', chr(0xFF) . chr(0xFE));
-      define('UTF8_BOM', chr(0xEF) . chr(0xBB) . chr(0xBF));
-      $first2 = substr($text, 0, 2);
-      $first3 = substr($text, 0, 3);
-      $first4 = substr($text, 0, 3);
-      $encodType = "";
-      if ($first3 == UTF8_BOM)
-          $encodType = 'UTF-8 BOM';
-      else if ($first4 == UTF32_BIG_ENDIAN_BOM)
-          $encodType = 'UTF-32BE';
-      else if ($first4 == UTF32_LITTLE_ENDIAN_BOM)
-          $encodType = 'UTF-32LE';
-      else if ($first2 == UTF16_BIG_ENDIAN_BOM)
-          $encodType = 'UTF-16BE';
-      else if ($first2 == UTF16_LITTLE_ENDIAN_BOM)
-          $encodType = 'UTF-16LE';
-
-      //下面的判断主要还是判断ANSI编码的·
-      if ($encodType == '') {//即默认创建的txt文本-ANSI编码的
-          $content = iconv("GBK", "UTF-8", $text);
-      } else if ($encodType == 'UTF-8 BOM') {//本来就是UTF-8不用转换
-          $content = $text;
-      } else {//其他的格式都转化为UTF-8就可以了
-          $content = iconv($encodType, "UTF-8", $text);
-      }
-      return $content;
-  } 　
+  // public function decode($text)
+  // {
+  //     define('UTF32_BIG_ENDIAN_BOM', chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF));
+  //     define('UTF32_LITTLE_ENDIAN_BOM', chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00));
+  //     define('UTF16_BIG_ENDIAN_BOM', chr(0xFE) . chr(0xFF));
+  //     define('UTF16_LITTLE_ENDIAN_BOM', chr(0xFF) . chr(0xFE));
+  //     define('UTF8_BOM', chr(0xEF) . chr(0xBB) . chr(0xBF));
+  //     $first2 = substr($text, 0, 2);
+  //     $first3 = substr($text, 0, 3);
+  //     $first4 = substr($text, 0, 3);
+  //     $encodType = "";
+  //     if ($first3 == UTF8_BOM)
+  //         $encodType = 'UTF-8 BOM';
+  //     else if ($first4 == UTF32_BIG_ENDIAN_BOM)
+  //         $encodType = 'UTF-32BE';
+  //     else if ($first4 == UTF32_LITTLE_ENDIAN_BOM)
+  //         $encodType = 'UTF-32LE';
+  //     else if ($first2 == UTF16_BIG_ENDIAN_BOM)
+  //         $encodType = 'UTF-16BE';
+  //     else if ($first2 == UTF16_LITTLE_ENDIAN_BOM)
+  //         $encodType = 'UTF-16LE';
+  //
+  //     //下面的判断主要还是判断ANSI编码的·
+  //     if ($encodType == '') {//即默认创建的txt文本-ANSI编码的
+  //         $content = iconv("GBK", "UTF-8", $text);
+  //     } else if ($encodType == 'UTF-8 BOM') {//本来就是UTF-8不用转换
+  //         $content = $text;
+  //     } else {//其他的格式都转化为UTF-8就可以了
+  //         $content = iconv($encodType, "UTF-8", $text);
+  //     }
+  //     return $content;
+  // } 　
 	/**
 	 * 检验数据的真实性，并且获取解密后的明文.
 	 * @param $encryptedData string 加密的用户数据
