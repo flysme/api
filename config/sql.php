@@ -180,7 +180,7 @@
     }
     /*获取店铺信息*/
     public static function getStoreInfo($store_id) {
-        return "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.discounts,store_setting.business_status FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
+        return "select store.store_id as _id,store.store_image,store.store_name,store_setting.start_delivery_price,store_setting.business_start_times,store_setting.business_start_times,business_end_times,store_setting.delivery_price,store_setting.business_status FROM store LEFT OUTER JOIN store_setting ON store.store_id = store_setting.store_id where store.store_id in('{$store_id}')";
     }
     /*用户登录*/
     public static function addUser($data){
