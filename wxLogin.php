@@ -45,12 +45,13 @@ class Wxlogin {
       return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
     } else {
       $msg = $this->Users($session_key); //获取微信用户信息（openid）
-      var_dump($msg);
-      exit();
+
       if ($msg['errcode'] == 0) {
         $open_id=$msg['data']->openId; //open_id;
         $username=$msg['data']->nickName; //nickName;
         $avatar=$msg['data']->openavatarUrlId; //open_id;
+        echo $username;
+        exit();
         $info=$this->getUserInfo($open_id);
         if(!$info || empty($info)){
           $user = $this->Users();
@@ -153,4 +154,4 @@ $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
 $Login = new Wxlogin($code,$iv,$encryptedData,$signature);
 $result = $Login->Login();
-echo json_encode($result);
+// echo json_encode($result);
