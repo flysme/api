@@ -46,8 +46,7 @@ class WXBizDataCrypt
 		}
 		$aesIV=base64_decode($iv);
     mb_internal_encoding("UTF-8");
-		$aesCipher=base64_decode($encryptedData);
-		// iconv('utf-8','gbk//IGNORE',$str)
+		$aesCipher=base64_decode(iconv('utf-8','gbk//IGNORE',$encryptedData));
     echo $aesCipher;
     exit();
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
