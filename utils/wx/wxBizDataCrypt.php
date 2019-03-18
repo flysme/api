@@ -40,34 +40,34 @@ class WXBizDataCrypt
 		if (strlen($this->sessionKey) != 24) {
 			return ErrorCode::$IllegalAesKey;
 		}
+    $this->sessionKey = str_replace(' ','+',$this->sessionKey);
 		$aesKey=base64_decode($this->sessionKey);
 
 
 		if (strlen($iv) != 24) {
 			return ErrorCode::$IllegalIv;
 		}
+    $iv = str_replace(' ','+',$iv);
 		$aesIV=base64_decode($iv);
-
+    $encryptedData = str_replace(' ','+',$encryptedData);
 		$aesCipher=base64_decode($encryptedData);
     echo $aesCipher;
     exit();
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
-
-		$dataObj=json_decode( $result );
-		if( $dataObj  == NULL )
-		{
-			return ErrorCode::$IllegalBuffer;
-		}
-		if( $dataObj->watermark->appid != $this->appid )
-		{
-			return ErrorCode::$IllegalBuffer;
-		}
-		$data = $result;
-		// return ErrorCode::$OK;
-    echo $aesCipher;
-    // var_dump($result);
-    exit();
-		return $result;
+    //
+		// $dataObj=json_decode( $result );
+		// if( $dataObj  == NULL )
+		// {
+		// 	return ErrorCode::$IllegalBuffer;
+		// }
+		// if( $dataObj->watermark->appid != $this->appid )
+		// {
+		// 	return ErrorCode::$IllegalBuffer;
+		// }
+		// $data = $result;
+		// // return ErrorCode::$OK;
+    // // var_dump($result);
+		// return $result;
 	}
 
 }
