@@ -81,7 +81,7 @@ class WXBizDataCrypt
       // return $ret1;
       echo $ret;
       exit();
-      return $ret;
+      // return $ret;
   }
   public function decode($text) {
       define('UTF32_BIG_ENDIAN_BOM', chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF));
