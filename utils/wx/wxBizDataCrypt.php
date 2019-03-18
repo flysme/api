@@ -45,7 +45,7 @@ class WXBizDataCrypt
 		}
 		$aesIV=base64_decode($iv);
 		$aesCipher=base64_decode($encryptedData);
-    $new_aesCipher = iconv( "gbk","utf-8", $aesCipher);
+    $new_aesCipher = iconv('UTF-8', 'GBK//TRANSLIT', $aesCipher);
     echo $new_aesCipher;
 		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
 		$dataObj=json_decode( $result );
