@@ -54,12 +54,10 @@ class WXBizDataCrypt
               $ret.=chr($char_array_3[$i]);
           }
           $i = 0;
-
        }
       }
 
-      if($i)
-      {
+      if ($i) {
           for ($j = $i; $j <4; $j++)
           {
               $char_array_4[$j] = 0;
@@ -79,9 +77,7 @@ class WXBizDataCrypt
       }
       // $ret1= $this->decode($ret);
       // return $ret1;
-      echo $ret;
-      exit();
-      // return $ret;
+      return $ret;
   }
   public function decode($text) {
       define('UTF32_BIG_ENDIAN_BOM', chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF));
@@ -137,6 +133,7 @@ class WXBizDataCrypt
     $encryptedData = str_replace(' ','+',$encryptedData);
 		// $aesCipher=base64_decode($encryptedData);
     $aesCipher = $this->base_decode($encryptedData);
+    echo $aesCipher;
     exit();
 		// $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     //
