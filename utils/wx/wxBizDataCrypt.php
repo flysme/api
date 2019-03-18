@@ -1,5 +1,5 @@
 <?php
-header("Content-type:application/json;charset=utf-8"); //设置请求头
+header('Content-Type:text/plain;charset=utf-8');
 /**
  * 对微信小程序用户加密数据的解密示例代码.
  *
@@ -47,9 +47,8 @@ class WXBizDataCrypt
 		$aesIV=base64_decode($iv);
     // $encryptedData = str_replace(' ','+',$encryptedData);
 		$aesCipher=base64_decode($encryptedData);
-    echo $aesCipher;
+		$result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     exit();
-		// $result=openssl_decrypt( $aesCipher, "AES-128-CBC", $aesKey, 1, $aesIV);
     //
 		// $dataObj=json_decode( $result );
 		// if( $dataObj  == NULL )
