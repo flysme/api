@@ -95,6 +95,8 @@
         $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
       };
       $insert = chop($insert,',');
+      echo $insert;
+      exit();
       return $insert;
     }
     /*新增sku attr-key*/
