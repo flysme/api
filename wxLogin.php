@@ -50,8 +50,8 @@ class Wxlogin {
         $open_id = $msgData['openId']; //open_id;
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
-        // $info= $this->getUserInfo($open_id);
-        // if(!isset($info) || empty($info)){
+        $info= $this->getUserInfo($open_id);
+        if(!isset($info) || empty($info)){
           $query_res = $this->addUser($open_id,$username,$avatar); //用户信息入库
           if (!empty($query_res)) {
             $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
@@ -63,7 +63,7 @@ class Wxlogin {
           } else {
             return array('error_code' => 401,'msg' => '用户登录失败');
           }
-        // }
+        }
         if($session_id){
           $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
         }else{
@@ -76,6 +76,7 @@ class Wxlogin {
   }
   // 添加用户入库
   public function addUser ($open_id,$username,$avatar) {
+    $this-> DB->connect();//连接数据库
     $queryData = array(
       'user_id' => $open_id,
       'username' => base64_encode($username),
@@ -86,14 +87,15 @@ class Wxlogin {
     );
     $addUsersql = Sql::addUser($queryData);
     $data= $this-> DB ->query($addUsersql);
-    echo $data;
-    exit();
+    $this-> DB->links->close();
     if (!empty($data))return $data;
     return null;
   }
   public function getUserInfo ($open_id) {
+    $this-> DB->connect();//连接数据库
     $userSql =  Sql::getUserInfo($open_id);
     $data = $this -> DB ->getData($userSql);
+    $this-> DB->links->close();
     return empty($data) ? null :$data;
   }
   // 微信登录
