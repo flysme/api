@@ -50,8 +50,8 @@ class Wxlogin {
         $open_id = $msgData['openId']; //open_id;
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
-        $info= $this->getUserInfo($open_id);
-        if(!isset($info) || empty($info)){
+        // $info= $this->getUserInfo($open_id);
+        // if(!isset($info) || empty($info)){
           $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
           if (!empty($isAdd)) {
             $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
@@ -63,7 +63,7 @@ class Wxlogin {
           } else {
             return array('error_code' => 401,'msg' => '用户登录失败');
           }
-        }
+        // }
         if($session_id){
           $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_id]);  //把3rd_session返回给客户端
         }else{
