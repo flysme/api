@@ -58,7 +58,7 @@ $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
 // $Login = new Wxlogin($code,$iv,$encryptedData,$signature);
 // var_dump($_SERVER);
 $key = base64_decode(str_replace(" ","+",$encryptedData));
-echo $key;
+echo 11111111121212122;
 exit();
 // $_result = $Login->getSessionKey();
 // echo json_encode($_result);
