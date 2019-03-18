@@ -51,8 +51,6 @@ class Wxlogin {
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
         // $info= $this->getUserInfo($open_id);
-        echo $msgData['openId'];
-        exit();
         // if(!isset($info) || empty($info)){
           $isAdd = $this->addUser($open_id,$username,$avatar); //用户信息入库
           if (!empty($isAdd)) {
@@ -84,9 +82,12 @@ class Wxlogin {
       'avatar' => $avatar,
       'open_id' => $open_id,
       'create_time' => time(),
-      'status' => 1
+      'status' => 1,
     );
-    $data=$this->DB->query(Sql::addUser($queryData));
+    $addUsersql = Sql::addUser($queryData);
+    echo $addUsersql;
+    exit();
+    $data=$this->DB->query($addUsersql);
     if (!empty($data)) {
       return $data;
     }
