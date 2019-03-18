@@ -89,14 +89,12 @@
     /*新增sku*/
     public static function createSkuProducts($data){
       $utils = new Utils();
-      $insert = "insert into product_specs (`sku_id`,`product_id`,`product_num`,`product_price`,`product_specs`,`product_img`, `upts_time`, `create_time`) values ";
+      $insert = "insert into product_specs (`sku_id`,`product_id`,`product_num`,`product_price`,`product_cost_price`,`product_specs`,`product_img`, `upts_time`, `create_time`) values ";
       foreach($data as $value){
         $sku_id = $utils->generateUid();
-        $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
+        $insert .='("'.$sku_id.'","'.$value['product_id'].'",'.$value['product_num'].','.$value['product_price'].',"'.$value['product_cost_price'].'","'.$value['product_specs'].'","'.$value['product_img'].'",'.time().','.time().'),';
       };
       $insert = chop($insert,',');
-      echo $insert;
-      exit();
       return $insert;
     }
     /*新增sku attr-key*/
