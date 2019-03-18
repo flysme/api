@@ -50,7 +50,8 @@ class Wxlogin {
         $open_id=$msg['data']->openId; //open_id;
         $username=$msg['data']->nickName; //nickName;
         $avatar=$msg['data']->openavatarUrlId; //open_id;
-        echo $username;
+        // echo $username;
+        print_r(objectToarray(json_decode($msg['data']));
         exit();
         $info=$this->getUserInfo($open_id);
         if(!$info || empty($info)){
