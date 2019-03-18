@@ -85,9 +85,9 @@ class Wxlogin {
       'status' => 1,
     );
     $addUsersql = Sql::addUser($queryData);
-    $data= $this->DB->query($addUsersql);
-    echo $data;
+    echo $addUsersql;
     exit();
+    $data= $this->DB->query($addUsersql);
     if (!empty($data))return $data;
     return null;
   }
