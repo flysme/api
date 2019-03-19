@@ -53,7 +53,7 @@ class Wxlogin {
     $session = ( isset($this->session_id) && $this->redis->exists($this->session_id) ) ? $this->redis->get($this->session_id) :null;
     if (isset($session))
     {
-      return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
+      return array('status' => 0,'sessionid' => $session_id,'msg' => '');
     }
     else
     {
@@ -75,16 +75,16 @@ class Wxlogin {
             {
               $session_id= $this->_3rd_session(16);  //生成3rd_session
               $this->redis->set($session_id,md5($openid.$session_key));
-              return array('error_code' => 0,'sessionid' => $session_id,'msg' => '');
+              return array('status' => 0,'sessionid' => $session_id,'msg' => '');
             }
           }
           else
           {
-            return array('error_code' => 401,'msg' => '用户登录失败');
+            return array('status' => 401,'msg' => '用户登录失败');
           }
         }
         if($this->session_id){
-            return array('error_code' => 0,'sessionid' => $this->session_id,'msg' => ''); //把3rd_session返回给客户端
+            return array('status' => 0,'sessionid' => $this->session_id,'msg' => ''); //把3rd_session返回给客户端
         }
         // else
         // {
@@ -94,7 +94,7 @@ class Wxlogin {
       }
       else
       {
-        return array('error_code' => $msg['errcode'],'msg' => $msg['errmsg']);
+        return array('status' => $msg['errcode'],'msg' => $msg['errmsg']);
       }
     }
   }
