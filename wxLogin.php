@@ -1,9 +1,9 @@
 <?php
-include_once './config/common.php';
-include_once './config/db.php';
-include_once './config/sql.php';
-include_once './utils/oauth.php';
-include_once './service/session/session.php';
+// include_once './config/common.php';
+// include_once './config/db.php';
+// include_once './config/sql.php';
+// include_once './utils/oauth.php';
+// include_once './service/session/session.php';
 
 
 // class Wxlogin {
@@ -137,7 +137,7 @@ include_once './service/session/session.php';
 // echo json_encode($result);
 
   $redis = new Redis();
-  $redis->connect('127.0.0.1', 6379); //连接Redis
-  $redis->select(2);//选择数据库2
-  $redis->set( "testKey" , "Hello Redis"); //设置测试key
-  echo $redis->get("testKey");//输出value
+   $redis->connect('127.0.0.1', 6379);
+   $count = $redis->exists('count') ? $redis->get('count') : 1;
+   echo $count;
+   $redis->set('count', ++$count);
