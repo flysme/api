@@ -51,8 +51,8 @@ class Wxlogin {
     $userSessionData = $this->getSessionKey();
     $session_key = $userSessionData['data']['session_key'];
     $session = ( isset($this->session_id) && $this->redis->exists($this->session_id) ) ? $this->redis->get($this->session_id) :null;
-    echo $session;
-    exit();
+    // echo $session;
+    // exit();
     if (isset($session))
     {
       return array('status' => 0,'sessionid' => $session_id,'msg' => '');
