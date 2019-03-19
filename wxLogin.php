@@ -50,9 +50,8 @@ class Wxlogin {
   public function Login () {
     $userSessionData = $this->getSessionKey();
     $session_key = $userSessionData['data']['session_key'];
-    $session = ( isset($this->session_id) && $this->redis->exists($this->session_id) ) ? $this->redis->get($this->session_id) :null;
-    // echo $session;
-    // exit();
+    $session = ( !empty($this->session_id) && $this->redis->exists($this->session_id) ) ? $this->redis->get($this->session_id) :null;
+    echo $session;
     if (isset($session))
     {
       return array('status' => 0,'sessionid' => $session_id,'msg' => '');
@@ -85,7 +84,7 @@ class Wxlogin {
             return array('status' => 401,'msg' => '用户登录失败');
           }
         }
-        if($this->session_id){
+        if(!empty($this->session_id)){
             return array('status' => 0,'sessionid' => $this->session_id,'msg' => ''); //把3rd_session返回给客户端
         }
         // else
