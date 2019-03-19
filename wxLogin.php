@@ -52,7 +52,9 @@ class Wxlogin {
   public function Login () {
     $userSessionData = $this->getSessionKey();
     $session_key = $userSessionData['data']['session_key'];
-    if (sha1($this->rawData,$session_key) !== $this->signature)// 数据签名校验
+    echo sha1($this->rawData,$session_key);
+    exit();
+    if (sha1($this->rawData,$session_key) != $this->signature)// 数据签名校验
     {
       return array('status' => 401,'msg' => '微信数据签名校验错误');
     }
@@ -146,8 +148,6 @@ $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
 $rawData = urldecode($_SERVER['HTTP_X_WX_RAWDATA']);
-echo $rawData;
-exit();
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
 $Login = new Wxlogin($code,$iv,$encryptedData,$signature,$rawData,$session_id);
 $result = $Login->Login();
