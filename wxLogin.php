@@ -76,7 +76,7 @@ class Wxlogin {
             if (!empty($currentInfo))
             {
               $session_id= $this->_3rd_session(16);  //生成3rd_session
-              $this->redis->set($session_id,md5($openid.$session_key),60 * 60 * 24 * 30); //缓存入库
+              $this->redis->set($session_id,$openid,60 * 60 * 24 * 30); //缓存入库
               return array('status' => 0,'sessionid' => $session_id,'msg' => '');
             }
             else
