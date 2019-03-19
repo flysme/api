@@ -22,16 +22,16 @@ class Wxlogin {
   public function __construct($code,$iv,$encryptedata,$signature,$session_id){
      include_once './config/db.php';
      include_once './utils/utils.php';
-     $this -> DB = new DB();
-     $this -> Utils = new Utils();
-     $this-> code = $code;
+     $this ->DB = new DB();
+     $this ->Utils = new Utils();
+     $this->code = $code;
      $this->redis = new Redis();
      $this->redis->connect('127.0.0.1', 6379);
-     $this-> iv = $iv;
-     $this-> signature = $signature;
-     $this-> encryptedata = $encryptedata;
-     $this-> session_id = $session_id;
-     $this-> code2SessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid={$this->appId}&secret={$this->appSecret}&js_code={$this->code}&grant_type=authorization_code";
+     $this->iv = $iv;
+     $this->signature = $signature;
+     $this->encryptedata = $encryptedata;
+     $this->session_id = $session_id;
+     $this->code2SessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid={$this->appId}&secret={$this->appSecret}&js_code={$this->code}&grant_type=authorization_code";
   }
 
   public function getSessionKey () {
@@ -148,8 +148,6 @@ $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
-var_dump($_SERVER);
-exit();
 $Login = new Wxlogin($code,$iv,$encryptedData,$signature,$session_id);
 $result = $Login->Login();
 echo json_encode($result);
