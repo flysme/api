@@ -148,6 +148,8 @@ $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
+echo $session_id;
+exit();
 $Login = new Wxlogin($code,$iv,$encryptedData,$signature,$session_id);
 $result = $Login->Login();
 echo json_encode($result);
