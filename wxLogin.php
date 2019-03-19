@@ -50,9 +50,7 @@ class Wxlogin {
   public function Login () {
     $userSessionData = $this->getSessionKey();
     $session_key = $userSessionData['data']['session_key'];
-    $session = ( !empty($this->session_id) && $this->redis->exists($this->session_id) ) ? $this->redis->get($this->session_id) :null;
-    echo $session;
-    if (isset($session))
+    if (!empty($this->session_id) && $this->redis->exists($this->session_id))
     {
       return array('status' => 0,'sessionid' => $session_id,'msg' => '');
     }
