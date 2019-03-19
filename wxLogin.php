@@ -16,10 +16,11 @@ class Wxlogin {
   public $redis;
   private $appSecret = '6c6c994f9621881075cb910b14ff2848';
   private $encryptedata;
+  private $rawData;
   private $session_id;
   private $code = '';
   private $code2SessionUrl = '';
-  public function __construct($code,$iv,$encryptedata,$signature,$session_id){
+  public function __construct($code,$iv,$encryptedata,$signature,$rawData,$session_id){
      include_once './config/db.php';
      include_once './utils/utils.php';
      $this ->DB = new DB();
@@ -30,6 +31,7 @@ class Wxlogin {
      $this->iv = $iv;
      $this->signature = $signature;
      $this->encryptedata = $encryptedata;
+     $this->rawData = $rawData;
      $this->session_id = $session_id;
      $this->code2SessionUrl = "https://api.weixin.qq.com/sns/jscode2session?appid={$this->appId}&secret={$this->appSecret}&js_code={$this->code}&grant_type=authorization_code";
   }
@@ -50,9 +52,13 @@ class Wxlogin {
   public function Login () {
     $userSessionData = $this->getSessionKey();
     $session_key = $userSessionData['data']['session_key'];
+    if (sha1($this->rawData,$session_key) !== $this->signature)// 数据签名校验
+    {
+      return array('status' => 401,'msg' => '微信数据签名校验错误');
+    }
     if (!empty($this->session_id) && $this->redis->exists($this->session_id))
     {
-      return array('status' => 0,'sessionid' => $this->session_id,'msg' => '');
+      return array('status' => 0,'sessionid' => $this->session_id,'msg' => ''); //把3rd_session返回给客户端
     }
     else
     {
@@ -63,37 +69,32 @@ class Wxlogin {
         $open_id = $msgData['openId']; //open_id;
         $username = $msgData['nickName']; //nickName;
         $avatar= $msgData['avatarUrl']; //avatarUrl;
-        $info = $this->getUserInfo($open_id);
-        if(!is_array($info))
+        $query_res = $this->addUser($open_id,$username,$avatar); //用户信息入库 注册
+        if (!empty($query_res))//是否注册成功
         {
-          $query_res = $this->addUser($open_id,$username,$avatar); //用户信息入库
-          if (!empty($query_res))
-          {
-            $currentInfo = $this->getUserInfo($open_id);                  //获取用户信息
+           $currentInfo = $this->getUserInfo($open_id); //获取用户信息
             if (!empty($currentInfo))
             {
               $session_id= $this->_3rd_session(16);  //生成3rd_session
-              $this->redis->set($session_id,md5($openid.$session_key));
+              $this->redis->set($session_id,md5($openid.$session_key)); //缓存入库
               return array('status' => 0,'sessionid' => $session_id,'msg' => '');
             }
-          }
-          else
-          {
-            return array('status' => 401,'msg' => '用户登录失败');
-          }
+            else
+            {
+              return array('status' => 401,'msg' => '用户登录失败');
+            }
+        }
+        else
+        {
+          return array('status' => 401,'msg' => '用户登录失败');
         }
         if(!empty($this->session_id)){
-            return array('status' => 0,'sessionid' => $this->session_id,'msg' => ''); //把3rd_session返回给客户端
+          return array('status' => 0,'sessionid' => $this->session_id,'msg' => ''); //把3rd_session返回给客户端
         }
-        // else
-        // {
-        //   return array('error_code' => 0,'sessionid' => $session_id,'msg' => ''); //把3rd_session返回给客户端
-        //   $this->ajaxReturn(['error_code'=>0,'sessionid'=>$session_db->getSid($info['id'])]);
-        // }
       }
       else
       {
-        return array('status' => $msg['errcode'],'msg' => $msg['errmsg']);
+         return array('status' => $msg['errcode'],'msg' => $msg['errmsg']);
       }
     }
   }
@@ -144,7 +145,8 @@ $code = $_SERVER['HTTP_X_WX_CODE'];
 $iv = $_SERVER['HTTP_X_WX_IV'];
 $encryptedData = $_SERVER['HTTP_X_WX_ENCRYPTEDATA'];
 $signature = $_SERVER['HTTP_X_WX_SIGNATURE'];
+$rawData = urldecode($_SERVER['HTTP_X_WX_RAWDATA']);
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
-$Login = new Wxlogin($code,$iv,$encryptedData,$signature,$session_id);
+$Login = new Wxlogin($code,$iv,$encryptedData,$signature,$rawData,$session_id);
 $result = $Login->Login();
 echo json_encode($result);
