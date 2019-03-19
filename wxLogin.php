@@ -17,6 +17,7 @@ class Wxlogin {
   private $appSecret = '6c6c994f9621881075cb910b14ff2848';
   private $encryptedata;
   private $rawData;
+  private $signature;
   private $session_id;
   private $code = '';
   private $code2SessionUrl = '';
