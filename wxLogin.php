@@ -52,7 +52,7 @@ class Wxlogin {
     $session_key = $userSessionData['data']['session_key'];
     if (!empty($this->session_id) && $this->redis->exists($this->session_id))
     {
-      return array('status' => 0,'sessionid' => $session_id,'msg' => '');
+      return array('status' => 0,'sessionid' => $this->session_id,'msg' => '');
     }
     else
     {
