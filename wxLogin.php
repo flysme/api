@@ -1,13 +1,9 @@
 <?php
 include_once './config/common.php';
-include_once './config/db.php';
 include_once './config/sql.php';
 include_once './utils/oauth.php';
 include_once './service/session/session.php';
-// if(hash('sha1',$rawData.$session_key) === $signature)
-// {
-//      echo  '验证通过';
-// }
+
 
 class Wxlogin {
   private $appId = 'wx6e219488e53a4991';

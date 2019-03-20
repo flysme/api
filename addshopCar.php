@@ -1,5 +1,7 @@
 <?php
-
+include_once './config/common.php';
+include_once './config/db.php';
+include_once './config/sql.php';
 //使用redis实现一个购物车功能
 class Cart
 {
@@ -16,30 +18,29 @@ class Cart
      *         b. 如果购物车中没有对应的商品，直接加入
      *         c. 如果购物车中有对应的商品，只要修改商品数量
      */
-
-    public function __construct()
+    private $session_id;
+    public function __construct($session_id)
     {
+        include_once './config/db.php';
+        $this ->DB = new DB();
+        $this->session_id = $session_id;
         //如果成员属性没有声明，默认就是公有属性
         $this->redis = new Redis;
         $this->redis->connect('127.0.0.1', 6379);
     }
-
-    public function addToCart($gid, $cartNum=1)
+    /*添加购物车*/
+    public function addToCart($sku_id, $cartNum=1)
     {
-        session_start();
-        if ($gid <= 0) {
-            throw new Exception("请输入商品ID");
-        }
-
-        //根据商品ID查询商品数据
+        if (empty($sku_id)) return array('status'=>401,'msg'=>'暂无sku_id');
+        //根据商品sku查询商品数据
         $goodData = $this->goodsData($sku_id);
+        // 判断sku是否有效
+        if (empty($goodData)) return array('status'=>401,'msg'=>'sku不存在');
 
-        $key = 'cart:'.session_id().':'.$sku_id;//id 说明：1、不仅仅要区分商品  2、 用户
+        $key = 'cart:'.$this->session_id.':'.$sku_id;//id 说明：1、不仅仅要区分商品  2、 用户
 
         // $data = $this->redis->hget($key, 'id');
         $data = $this->redis->exists($key);
-
-
         //判断购物车中是否有无商品，然后根据情况加入购物车
         if (!$data) {
             //购物车之前没有对应的商品的
@@ -47,9 +48,10 @@ class Cart
             $goodData['num'] = $cartNum;
             //将商品数据存放到redis中hash
             $this->redis->hmset($key, $goodData);
-            $key1 = 'cart:ids:set:'.session_id();
+            $key1 = 'cart:ids:set:'.$this->session_id;
             //将商品ID存放集合中,是为了更好将用户的购物车的商品给遍历出来
-            $this->redis->sadd($key1, $gid);
+            $this->redis->sadd($key1, $sku_id);
+
         } else {
             //购物车有对应的商品，只需要添加对应商品的数量
             $originNum = $this->redis->hget($key, 'num');
@@ -57,52 +59,34 @@ class Cart
             $newNum = $originNum + $cartNum;
             $this->redis->hset($key, 'num', $newNum);
         }
+        return array('status'=>0,'msg'=>'','data'=>array());
     }
 
-    //显示用户购物车的所有商品
+    /*获取购物车数据*/
     public function showCartList()
     {
-        session_start();
-        $sessId = session_id();
-        $key = 'cart:ids:set:'.session_id();
+        $list = array();
+        $key = 'cart:ids:set:'.$this->session_id;
         //先根据集合拿到商品ID
         $idArr =  $this->redis->sMembers($key);
         for ($i=0; $i<count($idArr); $i++) {
-
-            $k  = 'cart:'.session_id().':'.$idArr[$i];//id
-            // echo $k,'<br/>';
+            $k  = 'cart:'.$this->session_id.':'.$idArr[$i];//id
             $list[] = $this->redis->hGetAll($k);
         }
-        // include './View/show.php';
+        return $list;
     }
-
-    public function goodsData($gid)
+    /*获取sku数据*/
+    public function goodsData($sku_id)
     {
-        $goodsData = array(
-
-            1 => array(
-                'id' => 1,
-                'gname' => 'xxoo',
-                'price' => '1.5'
-            ),
-
-            2 => array(
-                'id' => 2,
-                'gname' => 'xxoo22',
-                'price' => '221.5'
-            ),
-            3 => array(
-                'id' => 3,
-                'gname' => 'xxoo33',
-                'price' => '331.5'
-            ),
-            4 => array(
-                'id' => 4,
-                'gname' => 'xxoo44',
-                'price' => '4441.5'
-            ),
-        );
-
-        return $goodsData[$gid];
+        $this->DB->connect();//连接数据库
+        $cartsku = Sql::getCartSku($sku_id);
+        $skuData= $this->DB->getData($cartsku);
+        $this->DB->links->close();
+        return $skuData;
     }
 }
+parse_str($_SERVER['QUERY_STRING']);
+$session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
+$cart = new Cart($session_id);
+$result = $cart->addToCart($sku_id);
+echo json_encode($result);

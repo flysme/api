@@ -189,4 +189,8 @@
     public static function getUserInfo($open_id){
       return "select user.user_id as _id,user.username,user.avatar,user.status,user.create_time FROM user where open_id='{$open_id}'";
     }
+    /*获取sku*/
+    public static function getCartSku ($sku_id) {
+      return "select product_specs.sku_id,product.product_id from product_specs  LEFT JOIN product ON (product_specs.product_id = product.product_id) where product_specs.sku_id in('{$sku_id}')";
+    }
   }
