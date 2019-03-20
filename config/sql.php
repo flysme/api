@@ -23,7 +23,7 @@
     }
     /*店铺地址经纬度*/
     public static function apply($data){
-      return "insert into store(`store_name`,`store_image`, `create_time`, `status`,`address`,`store_id`,`street`,`lng`,`lat`)values('{$data["store_name"]}','{$data["store_image"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}','{$data["lng"]}','{$data["lat"]}')";
+      return "insert into store(`store_name`,`store_image`, `create_time`, `status`,`address`,`store_id`,`street`,`points`)values('{$data["store_name"]}','{$data["store_image"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}',GeomFromText('POINT({$data["lng"]} {$data["lat"]})'))";
     }
     /*获取用户店铺*/
     public static function getStoreList($user_id){
@@ -165,12 +165,11 @@
     }
     // /*----移动端---*/
     /*获取附近的店铺*/
-    public static function getUserNearStoreList($storeName,$lat,$lng,$scope,$offset=0,$pagesize=10) {
-      // return "select * from store where lat < {$scope['maxLat']} and lat > {$scope['minLat']} and lng < {$scope['maxLng']} and lng > {$scope['minLng']}";
+    public static function getUserNearStoreList($storeName,$lng,$lat,$radius,$scope,$offset=0,$pagesize=10) {
       if (empty($storeName)) {
-        return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where lat<>0 and lat>{$scope['right-bottom']['lat']} and lat<{$scope['left-top']['lat']} and lng>{$scope['left-top']['lng']} and lng<{$scope['right-bottom']['lng']} and status in(1) limit {$offset},{$pagesize}";
+        return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where  MBRContains(LineString(Point({$lng} + {$radius} / ( 111.1 / COS(RADIANS({$lat}))),{$lng} + {$radius} / 111.1),Point({$lng} - {$radius} / ( 111.1 / COS(RADIANS({$lat}))), {$lat} - {$radius} / 111.1 )), points) and status in(1) limit {$offset},{$pagesize}";
       }
-      return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where lat<>0 and lat>{$scope['right-bottom']['lat']} and lat<{$scope['left-top']['lat']} and lng>{$scope['left-top']['lng']} and lng<{$scope['right-bottom']['lng']} and status in(1) and POSITION('{$storeName}' IN `store_name`) limit {$offset},{$pagesize}";
+      return "select store.*,store.store_id as _id,store_setting.* from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where  MBRContains(LineString(Point({$lng} + {$radius} / ( 111.1 / COS(RADIANS({$lat}))),{$lng} + {$radius} / 111.1),Point({$lng} - {$radius} / ( 111.1 / COS(RADIANS({$lat}))), {$lat} - {$radius} / 111.1 )), points) and status in(1) and POSITION('{$storeName}' IN `store_name`) limit {$offset},{$pagesize}";
     }
     /*获取店铺商品*/
     public static function getUserStoreTradingsList($store_id,$category_id) {
