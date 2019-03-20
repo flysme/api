@@ -167,9 +167,9 @@
     /*获取附近的店铺*/
     public static function getUserNearStoreList($storeName,$lng,$lat,$radius,$scope,$offset=0,$pagesize=10) {
       if (empty($storeName)) {
-        return "select store.*,store.store_id as _id,store_setting.*,(st_distance(point({$lat},{$lng}),store.points) * 111195) as distance from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where  MBRContains(LineString(Point({$lat} + {$radius} / ( 111.1 / COS(RADIANS({$lng}))),{$lng} + {$radius} / 111.1),Point({$lat} - {$radius} / ( 111.1 / COS(RADIANS({$lng}))), {$lng} - {$radius} / 111.1 )), points) and status in(1) limit {$offset},{$pagesize} ORDER BY store.distance";
+        return "select store.*,store.store_id as _id,store_setting.*,(st_distance(point({$lat},{$lng}),store.points) * 111195) as distance from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where  MBRContains(LineString(Point({$lat} + {$radius} / ( 111.1 / COS(RADIANS({$lng}))),{$lng} + {$radius} / 111.1),Point({$lat} - {$radius} / ( 111.1 / COS(RADIANS({$lng}))), {$lng} - {$radius} / 111.1 )), points) and status in(1) order by distance limit {$offset},{$pagesize}";
       }
-      return "select store.*,store.store_id as _id,store_setting.*,(st_distance(point({$lat},{$lng}),store.points) * 111195) as distance from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where  MBRContains(LineString(Point({$lat} + {$radius} / ( 111.1 / COS(RADIANS({$lng}))),{$lng} + {$radius} / 111.1),Point({$lat} - {$radius} / ( 111.1 / COS(RADIANS({$lng}))), {$lng} - {$radius} / 111.1 )), points) and status in(1) and POSITION('{$storeName}' IN `store_name`) limit {$offset},{$pagesize} ORDER BY store.distance";
+      return "select store.*,store.store_id as _id,store_setting.*,(st_distance(point({$lat},{$lng}),store.points) * 111195) as distance from store LEFT JOIN store_setting ON store.store_id = store_setting.store_id where  MBRContains(LineString(Point({$lat} + {$radius} / ( 111.1 / COS(RADIANS({$lng}))),{$lng} + {$radius} / 111.1),Point({$lat} - {$radius} / ( 111.1 / COS(RADIANS({$lng}))), {$lng} - {$radius} / 111.1 )), points) and status in(1) and POSITION('{$storeName}' IN `store_name`) order by distance limit {$offset},{$pagesize}";
     }
     /*获取店铺商品*/
     public static function getUserStoreTradingsList($store_id,$category_id) {
