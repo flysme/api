@@ -23,7 +23,7 @@
     }
     /*店铺地址经纬度*/
     public static function apply($data){
-      return "insert into store(`store_name`,`store_image`, `create_time`, `status`,`address`,`store_id`,`street`,`points`)values('{$data["store_name"]}','{$data["store_image"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}',GeomFromText('POINT({$data["lng"]} {$data["lat"]})'))";
+      return "insert into store(`store_name`,`store_image`, `create_time`, `status`,`address`,`store_id`,`street`,`points`)values('{$data["store_name"]}','{$data["store_image"]}','{$data["create_time"]}','{$data["status"]}','{$data["address"]}','{$data["store_id"]}','{$data["street"]}',GeomFromText('POINT({$data["lat"]} {$data["lng"]})'))";
     }
     /*获取用户店铺*/
     public static function getStoreList($user_id){
