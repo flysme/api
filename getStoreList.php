@@ -47,7 +47,6 @@ include_once './config/sql.php';
       $offset =  ($this -> cursor -1) * $pageSize; //单位公里
       // $scope = $this -> utils->returnSquarePoint($this -> lat, $this -> lng, $radius);
       $storesql = Sql::getUserNearStoreList($this -> name,$this -> lng,$this -> lat,$radius,$scope,$offset,$pageSize);
-      echo $storesql;
       $DB = new DB();
       $DB->connect();//连接数据库
       $result = $DB->getAll($storesql);
