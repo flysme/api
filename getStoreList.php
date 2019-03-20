@@ -32,7 +32,7 @@ include_once './config/sql.php';
             'business_end_times' => $value['business_end_times'],
             'delivery_price' => intval($value['delivery_price']),
             'start_delivery_price' => intval($value['start_delivery_price']),
-            'distance' =>$this -> utils-> getDistance( $value['lng'],$value['lat'],  $this -> lng,$this -> lat,2,1),
+            'distance' => round(($value['distance'] / 1000),2),
             'discounts' => unserialize($value['discounts']),
             'is_business' =>intval($value['business_status'] && $this -> utils->checkIsBetweenTime($value['business_start_times'],$value['business_end_times'])) //判断是否营业
           ),
