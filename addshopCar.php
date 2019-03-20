@@ -19,17 +19,19 @@ class Cart
      *         c. 如果购物车中有对应的商品，只要修改商品数量
      */
     private $session_id;
-    public function __construct($session_id)
+    private $store_id;
+    public function __construct($session_id,$store_id)
     {
         include_once './config/db.php';
         $this ->DB = new DB();
         $this->session_id = $session_id;
+        $this->store_id = $store_id;
         //如果成员属性没有声明，默认就是公有属性
         $this->redis = new Redis;
         $this->redis->connect('127.0.0.1', 6379);
     }
     /*添加购物车*/
-    public function addToCart($sku_id, $cartNum=1)
+    public function addToCart($store_id,$sku_id, $cartNum=1)
     {
         if (empty($sku_id)) return array('status'=>401,'msg'=>'暂无sku_id');
         //根据商品sku查询商品数据
@@ -37,7 +39,7 @@ class Cart
         // 判断sku是否有效
         if (empty($goodData)) return array('status'=>401,'msg'=>'sku不存在');
 
-        $key = 'cart:'.$this->session_id.':'.$sku_id;//id 说明：1、不仅仅要区分商品  2、 用户
+        $key = 'cart:'.$this->session_id.':'.$this->store_id.':'.$sku_id;//id 说明：1、不仅仅要区分商品  2、 用户
 
         // $data = $this->redis->hget($key, 'id');
         $data = $this->redis->exists($key);
@@ -48,7 +50,7 @@ class Cart
             $goodData['num'] = $cartNum;
             //将商品数据存放到redis中hash
             $this->redis->hmset($key, $goodData);
-            $key1 = 'cart:ids:set:'.$this->session_id;
+            $key1 = 'cart:ids:set:'.$this->session_id.'store:'.$this->store_id;
             //将商品ID存放集合中,是为了更好将用户的购物车的商品给遍历出来
             $this->redis->sadd($key1, $sku_id);
 
@@ -66,11 +68,11 @@ class Cart
     public function showCartList()
     {
         $list = array();
-        $key = 'cart:ids:set:'.$this->session_id;
+        $key = 'cart:ids:set:'.$this->session_id.'store:'.$this->store_id;
         //先根据集合拿到商品ID
-        $idArr =  $this->redis->sMembers($key);
-        for ($i=0; $i<count($idArr); $i++) {
-            $k  = 'cart:'.$this->session_id.':'.$idArr[$i];//id
+        $sku_idArr =  $this->redis->sMembers($key);
+        for ($i=0; $i<count($sku_idArr); $i++) {
+            $k  = 'cart:'.$this->session_id.':'.$this->store_id.':'.$sku_idArr[$i];//id
             $list[] = $this->redis->hGetAll($k);
         }
         return $list;
@@ -87,6 +89,6 @@ class Cart
 }
 parse_str($_SERVER['QUERY_STRING']);
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
-$cart = new Cart($session_id);
+$cart = new Cart($session_id,$store_id);
 $result = $cart->addToCart($sku_id);
 echo json_encode($result);
