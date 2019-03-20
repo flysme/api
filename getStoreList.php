@@ -42,10 +42,9 @@ include_once './config/sql.php';
       return $resetdata;
     }
     public function getStoreList () {
-      $radius = 10; //单位公里
-      $pageSize = 10;
-      $offset =  ($this -> cursor -1) * $pageSize; //单位公里
-      // $scope = $this -> utils->returnSquarePoint($this -> lat, $this -> lng, $radius);
+      $radius = 20; //默认搜索单位公里
+      $pageSize = 10; //分页数
+      $offset =  ($this -> cursor -1) * $pageSize; //页数偏移量
       $storesql = Sql::getUserNearStoreList($this -> name,$this -> lng,$this -> lat,$radius,$scope,$offset,$pageSize);
       $DB = new DB();
       $DB->connect();//连接数据库
