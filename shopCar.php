@@ -102,5 +102,5 @@ parse_str($_SERVER['QUERY_STRING']);
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
 $cart = new Cart($session_id,$store_id);
 $sku_id = trim($_GET['sku_id']);
-$result = isset($carhandle) ? $cart->addToCart($store_id,$sku_id) : $cart->reduceCart($store_id,$sku_id);
+$result = isset($carhandle) ? $cart->reduceCart($store_id,$sku_id) : $cart->addToCart($store_id,$sku_id);
 echo json_encode($result);
