@@ -35,6 +35,8 @@ class Cart
       if (empty($sku_id)) return array('status'=>401,'msg'=>'暂无sku_id');
       //购物车有对应的商品，只需要添加对应商品的数量
       $originNum = $this->redis->hget($key, 'num');
+      echo $originNum;
+      exit();
       if ($originNum <=0) return array('status'=>401,'msg'=>'数量最低为0');
       //原来的数量加上用户新加入的数量
       $newNum = $originNum - $cartNum;
