@@ -30,6 +30,17 @@ class Cart
         $this->redis = new Redis;
         $this->redis->connect('127.0.0.1', 6379);
     }
+    public function reduceCart ($store_id,$sku_id, $cartNum=1)
+    {
+      if (empty($sku_id)) return array('status'=>401,'msg'=>'暂无sku_id');
+      //购物车有对应的商品，只需要添加对应商品的数量
+      $originNum = $this->redis->hget($key, 'num');
+      if ($originNum <=0) return array('status'=>401,'msg'=>'数量最低为0');
+      //原来的数量加上用户新加入的数量
+      $newNum = $originNum - $cartNum;
+      $this->redis->hset($key, 'num', $newNum);
+      return array('status'=>0,'msg'=>'','data'=>(object)array());
+    }
     /*添加购物车*/
     public function addToCart($store_id,$sku_id, $cartNum=1)
     {
@@ -44,15 +55,15 @@ class Cart
         // $data = $this->redis->hget($key, 'id');
         $data = $this->redis->exists($key);
         //判断购物车中是否有无商品，然后根据情况加入购物车
-        if (!$data) {
-            //购物车之前没有对应的商品的
-            //购物车的商品数量
-            $goodData['num'] = $cartNum;
-            //将商品数据存放到redis中hash
-            $this->redis->hmset($key, $goodData);
+        if (!$data) { //购物车之前没有对应的商品的
+
+            $goodData['num'] = $cartNum;//购物车的商品数量
+
+            $this->redis->hmset($key, $goodData);//将商品数据存放到redis中hash
+
             $key1 = 'cart:ids:set:'.$this->session_id.'store:'.$this->store_id;
-            //将商品ID存放集合中,是为了更好将用户的购物车的商品给遍历出来
-            $this->redis->sadd($key1, $sku_id);
+
+            $this->redis->sadd($key1, $sku_id);//将商品ID存放集合中,是为了更好将用户的购物车的商品给遍历出来
 
         } else {
             //购物车有对应的商品，只需要添加对应商品的数量
@@ -61,7 +72,7 @@ class Cart
             $newNum = $originNum + $cartNum;
             $this->redis->hset($key, 'num', $newNum);
         }
-        return array('status'=>0,'msg'=>'','data'=>array());
+        return array('status'=>0,'msg'=>'','data'=>(object)array());
     }
 
     /*获取购物车数据*/
@@ -91,5 +102,5 @@ parse_str($_SERVER['QUERY_STRING']);
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
 $cart = new Cart($session_id,$store_id);
 $sku_id = trim($_GET['sku_id']);
-$result = $cart->addToCart($store_id,$sku_id);
+$result = isset($carhandle) ? $cart->addToCart($store_id,$sku_id) : $cart->reduceCart($store_id,$sku_id);
 echo json_encode($result);

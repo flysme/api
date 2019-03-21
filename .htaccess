@@ -21,7 +21,8 @@ RewriteRule ^(.+)/getUserStoreTradingsCategory$ getUserStoreTradingsCategory.php
 RewriteRule ^store_setting$ store_setting.php
 RewriteRule ^switchUserStore$ switchUserStore.php
 RewriteRule ^updateProduct$ updateProduct.php
-RewriteRule ^(.+)/addshopcar$ addshopCar.php?store_id=$1 [QSA,PT,L]
+RewriteRule ^(.+)/addshopcar$ shopCar.php?store_id=$1 [QSA,PT,L]
+RewriteRule ^(.+)/reduceshopcar$ shopCar.php?store_id=$1&carhandle=reduce [QSA,PT,L]
 RewriteRule ^upLoad$ upLoad.php
 RewriteRule ^wxLogin$ wxLogin.php
 ErrorDocument 404 /404.txt
