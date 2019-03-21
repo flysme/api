@@ -30,13 +30,12 @@ class Cart
         $this->redis = new Redis;
         $this->redis->connect('127.0.0.1', 6379);
     }
-    public function reduceCart ($store_id,$sku_id, $cartNum=1)
+    public function reduceCart ($sku_id, $cartNum=1)
     {
       if (empty($sku_id)) return array('status'=>401,'msg'=>'暂无sku_id');
+      $key = 'cart:'.$this->session_id.':'.$this->store_id.':'.$sku_id;//id 说明：1、不仅仅要区分商品  2、 用户
       //购物车有对应的商品，只需要添加对应商品的数量
       $originNum = $this->redis->hget($key, 'num');
-      echo $originNum;
-      exit();
       if ($originNum <=0) return array('status'=>401,'msg'=>'数量最低为0');
       //原来的数量加上用户新加入的数量
       $newNum = $originNum - $cartNum;
@@ -44,7 +43,7 @@ class Cart
       return array('status'=>0,'msg'=>'','data'=>(object)array());
     }
     /*添加购物车*/
-    public function addToCart($store_id,$sku_id, $cartNum=1)
+    public function addToCart($sku_id, $cartNum=1)
     {
         if (empty($sku_id)) return array('status'=>401,'msg'=>'暂无sku_id');
         //根据商品sku查询商品数据
@@ -104,5 +103,5 @@ parse_str($_SERVER['QUERY_STRING']);
 $session_id = isset($_SERVER['HTTP_X_SESSION_TOKEN']) ? $_SERVER['HTTP_X_SESSION_TOKEN'] :null;
 $cart = new Cart($session_id,$store_id);
 $sku_id = trim($_GET['sku_id']);
-$result = isset($carhandle) ? $cart->reduceCart($store_id,$sku_id) : $cart->addToCart($store_id,$sku_id);
+$result = isset($carhandle) ? $cart->reduceCart($sku_id) : $cart->addToCart($sku_id);
 echo json_encode($result);
